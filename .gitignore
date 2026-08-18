@@ -1,0 +1,9 @@
+# Allowlist: ignore everything by default, then re-include ONLY what is safe to
+# publish. This guarantees raw.csv, data.json, sync.py, server.js, README.md,
+# .claude/, build-snapshot.py and any future file never leak to the repo.
+*
+
+# Only the GitHub Pages publish folder (self-contained snapshot) + this file.
+!.gitignore
+!docs/
+!docs/**

@@ -1,0 +1,2015 @@
+<title>Explore Funnel — drop leaks, fail rates, retention &amp; result actions</title>
+<style>
+  /* codex-lb design language — shadcn / OKLCH, dark-first data console */
+  :root{
+    /* light */
+    --bg:oklch(98.5% .002 260); --surface:oklch(100% 0 0); --surface-2:oklch(96.8% .003 260);
+    --border:oklch(91% .004 260); --border-strong:oklch(84% .005 260); --grid:oklch(93.5% .004 260);
+    --ink:oklch(20% .01 260); --ink-2:oklch(40% .01 260); --muted:oklch(54% .01 260);
+    --free:oklch(52% .17 252); --free-soft:oklch(94% .035 252);
+    --prem:oklch(57% .18 48); --prem-soft:oklch(94% .05 60);
+    --all:oklch(58% .008 260);
+    --good:oklch(52% .13 162); --good-soft:oklch(94% .05 162);
+    --warn:oklch(60% .12 78); --warn-soft:oklch(94% .06 85);
+    --crit:oklch(55% .19 27); --crit-soft:oklch(94% .05 27);
+    --track:oklch(93% .004 260);
+    --shadow:0 1px 2px oklch(20% .01 260/.06),0 4px 14px -8px oklch(20% .01 260/.14);
+    --radius:.5rem;
+    --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:oklch(0% 0 0); --surface:oklch(14.5% 0 0); --surface-2:oklch(20% 0 0);
+      --border:oklch(27% 0 0); --border-strong:oklch(35% 0 0); --grid:oklch(23% 0 0);
+      --ink:oklch(96% 0 0); --ink-2:oklch(77% 0 0); --muted:oklch(62% 0 0);
+      --free:oklch(70% .15 245); --free-soft:oklch(30% .08 245);
+      --prem:oklch(72% .19 55); --prem-soft:oklch(32% .10 55);
+      --all:oklch(60% 0 0);
+      --good:oklch(72% .15 162); --good-soft:oklch(30% .07 162);
+      --warn:oklch(80% .14 85); --warn-soft:oklch(32% .07 85);
+      --crit:oklch(68% .19 25); --crit-soft:oklch(32% .11 25);
+      --track:oklch(24% 0 0);
+      --shadow:0 1px 2px oklch(0% 0 0/.5),0 6px 20px -12px oklch(0% 0 0/.8);
+    }
+  }
+  :root[data-theme="light"]{
+    --bg:oklch(98.5% .002 260);--surface:oklch(100% 0 0);--surface-2:oklch(96.8% .003 260);
+    --border:oklch(91% .004 260);--border-strong:oklch(84% .005 260);--grid:oklch(93.5% .004 260);
+    --ink:oklch(20% .01 260);--ink-2:oklch(40% .01 260);--muted:oklch(54% .01 260);
+    --free:oklch(52% .17 252);--free-soft:oklch(94% .035 252);--prem:oklch(57% .18 48);--prem-soft:oklch(94% .05 60);--all:oklch(58% .008 260);
+    --good:oklch(52% .13 162);--good-soft:oklch(94% .05 162);--warn:oklch(60% .12 78);--warn-soft:oklch(94% .06 85);--crit:oklch(55% .19 27);--crit-soft:oklch(94% .05 27);--track:oklch(93% .004 260);
+    --shadow:0 1px 2px oklch(20% .01 260/.06),0 4px 14px -8px oklch(20% .01 260/.14);
+  }
+  :root[data-theme="dark"]{
+    --bg:oklch(0% 0 0);--surface:oklch(14.5% 0 0);--surface-2:oklch(20% 0 0);
+    --border:oklch(27% 0 0);--border-strong:oklch(35% 0 0);--grid:oklch(23% 0 0);
+    --ink:oklch(96% 0 0);--ink-2:oklch(77% 0 0);--muted:oklch(62% 0 0);
+    --free:oklch(70% .15 245);--free-soft:oklch(30% .08 245);--prem:oklch(72% .19 55);--prem-soft:oklch(32% .10 55);--all:oklch(60% 0 0);
+    --good:oklch(72% .15 162);--good-soft:oklch(30% .07 162);--warn:oklch(80% .14 85);--warn-soft:oklch(32% .07 85);--crit:oklch(68% .19 25);--crit-soft:oklch(32% .11 25);--track:oklch(24% 0 0);
+    --shadow:0 1px 2px oklch(0% 0 0/.5),0 6px 20px -12px oklch(0% 0 0/.8);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.5;
+    -webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
+  .wrap{max-width:960px;margin:0 auto;padding:32px 20px 72px}
+  .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  h1{font-size:30px;line-height:1.15;margin:.28em 0 .1em;text-wrap:balance;letter-spacing:-.01em}
+  .sub{color:var(--ink-2);font-size:15px;max-width:64ch}
+  .meta{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:14px;font-size:12.5px;color:var(--muted)}
+  .meta b{color:var(--ink-2);font-weight:600}
+  .caveat{margin:18px 0 6px;padding:11px 14px;border:1px solid var(--warn);border-left-width:3px;
+    background:var(--warn-soft);border-radius:var(--radius);font-size:13px;color:var(--ink)}
+  section{background:var(--surface);border:1px solid var(--border);border-radius:calc(var(--radius) + 4px);padding:22px 22px 24px;
+    margin-top:18px;box-shadow:var(--shadow)}
+  .sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:2px}
+  h2{font-size:18px;margin:0;letter-spacing:-.01em}
+  h3{font-size:13.5px;margin:0 0 4px}
+  .sec-note{color:var(--muted);font-size:12.5px;margin:4px 0 14px}
+  .chart-title{font-size:13px;font-weight:600;color:var(--ink-2);margin:2px 0 6px}
+  /* ECharts hosts render into these sized boxes (SVG renderer) */
+  .chart{width:100%;overflow:visible}
+  /* KPI row */
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}
+  .kpi{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:13px 14px}
+  .kpi .n{font-size:26px;font-weight:700;letter-spacing:-.02em;font-family:var(--mono)}
+  .kpi .l{font-size:11px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.05em}
+  .kpi .d{font-size:11.5px;margin-top:6px;font-weight:600}
+  .d.bad{color:var(--crit)}.d.ok{color:var(--good)}
+  /* toggle */
+  .toggle{display:inline-flex;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:3px;gap:2px}
+  .toggle button{font:inherit;font-size:12.5px;font-weight:600;border:0;background:transparent;color:var(--ink-2);
+    padding:6px 13px;border-radius:calc(var(--radius) - 3px);cursor:pointer;display:flex;align-items:center;gap:6px}
+  .toggle button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+  .dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+  .dot.free{background:var(--free)}.dot.prem{background:var(--prem)}.dot.all{background:var(--all)}
+  /* legend */
+  .legend{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:10px;font-size:12px;color:var(--ink-2)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .sw{width:12px;height:12px;border-radius:3px;display:inline-block}
+  .sw.good{background:var(--good)}.sw.warn{background:var(--warn)}.sw.crit{background:var(--crit)}
+  .sw.free{background:var(--free)}.sw.prem{background:var(--prem)}.sw.all{background:var(--all)}
+  .two{display:grid;grid-template-columns:1.15fr .85fr;gap:26px;align-items:start}
+  .health-grid{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:8px}
+  .verdict{font-size:12.5px;font-weight:600;margin-top:10px}
+  .mapnote{font-size:11.5px;color:var(--muted);font-family:var(--mono);margin-bottom:8px}
+  /* callouts */
+  .callouts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}
+  .call{border:1px solid var(--border);border-left-width:3px;border-radius:var(--radius);padding:12px 14px;background:var(--surface-2)}
+  .call.c1{border-left-color:var(--crit)} .call.c2{border-left-color:var(--warn)}
+  .call .h{font-weight:700;font-size:13.5px} .call .p{font-size:12.5px;color:var(--ink-2);margin-top:3px}
+  .call .big{font-size:20px;font-weight:700;font-family:var(--mono)}
+  .cliff-tag{display:inline-block;margin-left:6px;font-size:10.5px;font-weight:700;color:var(--crit);
+    background:var(--crit-soft);padding:1px 7px;border-radius:20px;vertical-align:middle}
+  /* table */
+  .tbl-scroll{overflow-x:auto;margin-top:14px;border:1px solid var(--border);border-radius:var(--radius)}
+  table{border-collapse:collapse;width:100%;font-size:12.5px;min-width:640px}
+  th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--border)}
+  th{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600;
+    position:sticky;top:0;background:var(--surface-2)}
+  tbody tr:last-child td{border-bottom:0}
+  tbody tr:hover td{background:var(--surface-2)}
+  td.ev{font-family:var(--mono);font-size:11.5px;color:var(--free);white-space:nowrap}
+  td.num{text-align:right;font-weight:600;font-family:var(--mono)}
+  .role{font-size:10.5px;font-weight:700;padding:1px 8px;border-radius:20px;white-space:nowrap}
+  .role.funnel{background:var(--free-soft);color:var(--free)}
+  .role.drop{background:var(--crit-soft);color:var(--crit)}
+  .role.reentry{background:var(--good-soft);color:var(--good)}
+  .role.support{background:var(--surface-2);color:var(--muted);border:1px solid var(--border)}
+  .sev-pill{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;display:inline-block;white-space:nowrap;text-transform:uppercase;letter-spacing:.04em}
+  .sev-pill.crit{background:var(--crit-soft);color:var(--crit)}
+  .sev-pill.warn{background:var(--warn-soft);color:var(--warn)}
+  .sev-pill.good{background:var(--good-soft);color:var(--good)}
+  .stage-badge{font-size:11px;font-weight:600;padding:2px 7px;border-radius:5px;background:var(--surface-2);border:1px solid var(--border);color:var(--ink-2);white-space:nowrap}
+  footer{margin-top:26px;font-size:11.5px;color:var(--muted);text-align:center}
+  /* sync toolbar */
+  .toolbar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:16px}
+  .sync-btn{font:inherit;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:8px;
+    background:var(--free);color:oklch(100% 0 0);border:1px solid var(--free);border-radius:var(--radius);
+    padding:8px 15px;cursor:pointer;transition:filter .15s,opacity .15s}
+  .sync-btn:hover{filter:brightness(1.08)}
+  .sync-btn:disabled{opacity:.6;cursor:progress}
+  .sync-btn:focus-visible{outline:2px solid var(--free);outline-offset:2px}
+  .sync-btn .spin{width:13px;height:13px;border:2px solid oklch(100% 0 0/.45);border-top-color:oklch(100% 0 0);
+    border-radius:50%;display:none;animation:spin .7s linear infinite}
+  .sync-btn[aria-busy="true"] .spin{display:inline-block}
+  .sync-btn[aria-busy="true"] .glyph{display:none}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @media (prefers-reduced-motion:reduce){.sync-btn .spin{animation:none}}
+  .sync-status{font-size:12.5px;color:var(--muted);font-family:var(--mono)}
+  .sync-status b{color:var(--ink-2);font-weight:600}
+  .sync-status.ok b{color:var(--good)} .sync-status.err b{color:var(--crit)}
+  @media (max-width:700px){
+    .kpis{grid-template-columns:repeat(2,1fr)}
+    .health-grid,.callouts,.two{grid-template-columns:1fr}
+    h1{font-size:24px}
+  }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Artimind · Explore feature (302) · try-flow</div>
+    <h1>Where users drop off in Explore — fail rates, retention &amp; result actions</h1>
+    <p class="sub">Every Explore event mapped to the journey — tracking fail rates, drop-off leaks, repeat generation appetite, retention, and save/share health across free and premium segments.</p>
+    <div class="meta" id="meta"></div>
+    <div class="toolbar">
+      <button class="sync-btn" id="sync" aria-busy="false">
+        <span class="spin" aria-hidden="true"></span><span class="glyph" aria-hidden="true">⟳</span>
+        <span>Sync BigQuery</span>
+      </button>
+      <span class="sync-status" id="sync-status">Loading current data…</span>
+    </div>
+    <div class="caveat"><b>Read this as a QA/staging sample.</b> Small n, uneven daily users (1/28/1/2/69).
+      Funnel shape, drop reasons and the event map are trustworthy now; retention &amp; premium-mix are directional —
+      re-run on a real ≥14-day window to confirm.</div>
+  </header>
+
+  <!-- FUNNEL -->
+  <section>
+    <div class="sec-head"><h2>The try-flow funnel</h2></div>
+    <p class="sec-note">Two views of the same 7 steps. The line chart is the story: free users fall off a cliff at generate; premium barely dips.</p>
+
+    <div class="chart-title">Survival by segment — % of Explore-openers still in the flow</div>
+    <div id="line-chart" class="chart" style="height:300px" role="img" aria-label="Funnel survival line chart by segment"></div>
+    <div class="legend">
+      <span><span class="sw all"></span>All users</span>
+      <span><span class="sw free"></span>Free</span>
+      <span><span class="sw prem"></span>Premium</span>
+    </div>
+
+    <div class="sec-head" style="margin-top:26px">
+      <div class="chart-title" style="margin:0">Funnel shape — unique users per step</div>
+      <div class="toggle" role="group" aria-label="Segment">
+        <button data-seg="all" aria-pressed="true"><span class="dot all"></span>All</button>
+        <button data-seg="free" aria-pressed="false"><span class="dot free"></span>Free</button>
+        <button data-seg="premium" aria-pressed="false"><span class="dot prem"></span>Premium</button>
+      </div>
+    </div>
+    <div id="funnel-chart" class="chart" style="height:360px" role="img" aria-label="Funnel chart"></div>
+    <div class="kpis" id="funnel-kpis"></div>
+  </section>
+
+  <!-- RETRY / REPEAT GENERATION -->
+  <section>
+    <div class="sec-head"><h2>Retry behaviour — do they generate again?</h2></div>
+    <p class="sec-note">Each generation mints a <code>try_id</code> at <code>explore_style_click</code>, so
+      "another video" = another <code>try_id</code>. It's a heavy repeat-generate loop — and the previous
+      outcome barely changes whether they go again.</p>
+    <div class="kpis" id="retry-kpis"></div>
+    <div class="two" style="margin-top:22px">
+      <div>
+        <div class="chart-title">Generations per user <span style="font-weight:400;color:var(--muted)">— distribution</span></div>
+        <div id="retry-dist" class="chart" style="height:210px" role="img" aria-label="Tries per user distribution"></div>
+        <div class="legend">
+          <span><span class="sw" style="background:var(--track)"></span>One &amp; done</span>
+          <span><span class="sw free"></span>Retried (≥2)</span>
+        </div>
+      </div>
+      <div>
+        <div class="chart-title">After a try, do they start another? <span style="font-weight:400;color:var(--muted)">— by how that try ended</span></div>
+        <div id="retry-continue" class="chart" style="height:200px" role="img" aria-label="Continuation rate by outcome"></div>
+        <p class="sec-note" style="margin:6px 0 0">Share of tries followed by another try (n in tooltip).</p>
+      </div>
+    </div>
+    <div class="callouts" style="margin-top:18px">
+      <div class="call c1" id="retry-call-1"></div>
+      <div class="call c2" id="retry-call-2"></div>
+    </div>
+  </section>
+
+  <!-- FAILURES & ERROR INTELLIGENCE -->
+  <section id="failures-section">
+    <div class="sec-head">
+      <h2>Failures &amp; Error Intelligence <span style="font-size:12px;font-weight:400;color:var(--crit)">· technical drop &amp; system health</span></h2>
+    </div>
+    <p class="sec-note">Quantifying failure rates across every Explore stage: generation processing, feed loading, save/share actions, and background Live Activity.</p>
+
+    <!-- KPI Row -->
+    <div class="kpis" id="fail-kpis"></div>
+
+    <!-- Daily Fail Rates Trend -->
+    <div style="margin-top:22px">
+      <div class="chart-title">Daily failure &amp; error rates (%) <span style="font-weight:400;color:var(--muted)">— across the 7-day window</span></div>
+      <div id="fail-daily-chart" class="chart" style="height:260px" role="img" aria-label="Daily failure rates line chart"></div>
+      <div class="legend">
+        <span><span class="sw crit"></span>Generation Fail %</span>
+        <span><span class="sw warn"></span>Share Fail %</span>
+        <span><span class="sw good"></span>Live Activity Fail %</span>
+        <span><span class="sw all"></span>Feed Error %</span>
+      </div>
+    </div>
+
+    <!-- Diagnostic Breakdowns -->
+    <div class="health-grid" style="margin-top:22px">
+      <div>
+        <h3>Generation Errors &amp; Timeouts</h3>
+        <div class="mapnote">Error codes &amp; duration distribution</div>
+        <div id="gen-err-donut" class="chart" style="height:200px" role="img" aria-label="Generation error codes donut"></div>
+        <div class="legend" id="gen-err-legend"></div>
+        <div class="callouts" style="grid-template-columns:1fr;margin-top:12px">
+          <div class="call c1">
+            <div class="h">Long timeout before failure</div>
+            <div class="p">Median fail duration: <span class="big" id="gen-fail-median">65.1s</span> (avg <span id="gen-fail-avg">299s</span>). Users wait over a minute before backend timeout triggers.</div>
+          </div>
+          <div class="call c2">
+            <div class="h">Segment fail comparison</div>
+            <div class="p" id="gen-fail-seg-note"></div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h3>Feed &amp; Action Failure Types</h3>
+        <div class="mapnote">Catalog load errors &amp; blocked actions</div>
+        <div id="feed-err-donut" class="chart" style="height:200px" role="img" aria-label="Feed error types donut"></div>
+        <div class="legend" id="feed-err-legend"></div>
+        <div class="callouts" style="grid-template-columns:1fr;margin-top:12px">
+          <div class="call c1">
+            <div class="h">Share sheet failure is the #1 action leak</div>
+            <div class="p"><span class="big" id="share-fail-call">75.6%</span> of share attempts fail (711 failed + 39 dismissed of 940), pointing to export rendering crashes.</div>
+          </div>
+          <div class="call c2">
+            <div class="h">Feed loading: 62% backend / 38% offline</div>
+            <div class="p"><span class="big" id="feed-err-call">128</span> fetch errors vs <span id="feed-offline-call">78</span> offline encounters among 138 affected users.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Granular Failure Details Table -->
+    <div class="sec-head" style="margin-top:26px">
+      <div class="chart-title" style="margin:0">Granular failure &amp; error catalog <span style="font-weight:400;color:var(--muted)">— all logged error scenarios</span></div>
+    </div>
+    <div class="tbl-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Stage</th>
+            <th>Event / Trigger</th>
+            <th>Error Signature</th>
+            <th class="num">Users</th>
+            <th class="num">Events</th>
+            <th class="num">Fail Rate</th>
+            <th>Severity</th>
+            <th>Diagnostic Impact &amp; Root Cause</th>
+          </tr>
+        </thead>
+        <tbody id="fail-details-tbl"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- WHERE THEY DROP -->
+  <section>
+    <div class="sec-head"><h2>Where they drop — the three leaks</h2></div>
+    <p class="sec-note">Ranked by how many users each one costs.</p>
+    <div class="two">
+      <div>
+        <div class="chart-title">Abandon reasons <span style="font-weight:400;color:var(--muted)">— explore_try_abandon, event rows</span></div>
+        <div id="abandon-chart" class="chart" style="height:170px" role="img" aria-label="Abandon reasons bar chart"></div>
+        <div class="chart-title" style="margin-top:18px">Result action mix <span style="font-weight:400;color:var(--muted)">— unique users</span></div>
+        <div id="action-chart" class="chart" style="height:210px" role="img" aria-label="Result action bar chart"></div>
+      </div>
+      <div class="callouts" style="grid-template-columns:1fr">
+        <div class="call c1">
+          <div class="h">1 · Free hit the generate paywall <span class="cliff-tag">#1 leak</span></div>
+          <div class="p" id="leak-call-1"></div>
+        </div>
+        <div class="call c2">
+          <div class="h">2 · Browse-only: never tap a style</div>
+          <div class="p" id="leak-call-2"></div>
+        </div>
+        <div class="call c1">
+          <div class="h">3 · "Back" beats "Save" at the result</div>
+          <div class="p" id="leak-call-3"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SAVE & SHARE -->
+  <section>
+    <div class="sec-head"><h2>Save &amp; Share health</h2></div>
+    <p class="sec-note">Of the users who see a result, do their save / share actions actually complete?
+      From <code>explore_try_result_action</code> · <code>action</code> × <code>status</code>.</p>
+    <div class="health-grid">
+      <div>
+        <h3 id="save-h3">Save — healthy</h3>
+        <div class="mapnote" id="save-mapnote">action=save</div>
+        <div id="save-donut" class="chart" style="height:220px" role="img" aria-label="Save status donut"></div>
+        <div class="legend" id="save-legend"></div>
+        <div class="verdict" id="save-verdict" style="color:var(--good)"></div>
+      </div>
+      <div>
+        <h3 id="share-h3">Share — broken</h3>
+        <div class="mapnote" id="share-mapnote">action=share</div>
+        <div id="share-donut" class="chart" style="height:220px" role="img" aria-label="Share status donut"></div>
+        <div class="legend" id="share-legend"></div>
+        <div class="verdict" id="share-verdict" style="color:var(--crit)"></div>
+      </div>
+    </div>
+    <div class="chart-title" style="margin-top:22px">Save &amp; share rate among result-viewers — free vs premium</div>
+    <div id="engage-chart" class="chart" style="height:210px" role="img" aria-label="Save and share rate grouped bar chart"></div>
+    <div class="legend"><span><span class="sw free"></span>Free</span><span><span class="sw prem"></span>Premium</span></div>
+  </section>
+
+  <!-- RETENTION -->
+  <section>
+    <div class="sec-head"><h2>Retention <span style="font-size:12px;font-weight:400;color:var(--warn)">· directional only (QA window)</span></h2></div>
+    <p class="sec-note">Distinct days each user opened Explore, and daily unique users across the window.</p>
+    <div class="two">
+      <div>
+        <div class="chart-title">Returned on a 2nd day?</div>
+        <div id="ret-donut" class="chart" style="height:220px" role="img" aria-label="Retention donut"></div>
+        <div class="legend" id="ret-legend"></div>
+      </div>
+      <div>
+        <div class="chart-title">Daily unique users</div>
+        <div id="daily-chart" class="chart" style="height:220px" role="img" aria-label="Daily unique users column chart"></div>
+        <p id="reentry-note" style="font-size:12px;color:var(--muted);margin-top:8px"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MOST-USED STYLES -->
+  <section>
+    <div class="sec-head"><h2>Most-used styles <span style="font-size:12px;font-weight:400;color:var(--muted)">· what people actually tap</span></h2></div>
+    <p class="sec-note">Which styles and categories users pick from the feed — ranked by unique users who tapped
+      (<code>explore_style_click</code>), with how many went on to generate and see a result.
+      <span id="styles-distinct"></span></p>
+    <div class="chart-title">Top style categories — unique users who tapped a style</div>
+    <div id="cat-chart" class="chart" style="height:340px" role="img" aria-label="Top style categories bar chart"></div>
+    <div class="chart-title" style="margin-top:22px">Top 15 individual styles</div>
+    <div class="tbl-scroll">
+      <table>
+        <thead><tr><th class="num">#</th><th>Style</th><th>Category</th><th class="num">Tapped</th><th class="num">Generated</th><th class="num">Result</th></tr></thead>
+        <tbody id="styles-tbl"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- EVENT MAP -->
+  <section>
+    <div class="sec-head"><h2>Event map — the full Explore taxonomy</h2></div>
+    <p class="sec-note">Every event in the 7-day export, mapped to its meaning (from the tracking spec) and its funnel role.</p>
+    <div class="tbl-scroll">
+      <table>
+        <thead><tr><th>Event</th><th>What it means</th><th class="num">Users</th><th class="num">Rows</th><th>Role</th></tr></thead>
+        <tbody id="eventmap"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>Explore funnel · BQ analytics_467542142 · numbers reproducible from
+    <code>explore-funnel-data.json</code> · QA window 2026-07-30 → 08-04</footer>
+</div>
+
+<script>window.__SNAPSHOT_DATA__={
+  "steps": [
+    "Enter",
+    "Feed",
+    "Tap style",
+    "Pick photo",
+    "Generate",
+    "Result",
+    "Action"
+  ],
+  "events": [
+    "explore_view",
+    "explore_catalog_ready",
+    "explore_style_click",
+    "explore_try_picker_select",
+    "explore_try_generate_start",
+    "explore_try_result_view",
+    "explore_try_result_action"
+  ],
+  "funnel": {
+    "all": [
+      [
+        2266,
+        100.0,
+        0
+      ],
+      [
+        2214,
+        97.7,
+        2.3
+      ],
+      [
+        1591,
+        70.2,
+        28.1
+      ],
+      [
+        1468,
+        64.8,
+        7.7
+      ],
+      [
+        1192,
+        52.6,
+        18.8
+      ],
+      [
+        1143,
+        50.4,
+        4.1
+      ],
+      [
+        1127,
+        49.7,
+        1.4
+      ]
+    ],
+    "free": [
+      [
+        1115,
+        100.0,
+        0
+      ],
+      [
+        1067,
+        95.7,
+        4.3
+      ],
+      [
+        534,
+        47.9,
+        50.0
+      ],
+      [
+        436,
+        39.1,
+        18.4
+      ],
+      [
+        163,
+        14.6,
+        62.6
+      ],
+      [
+        144,
+        12.9,
+        11.7
+      ],
+      [
+        135,
+        12.1,
+        6.3
+      ]
+    ],
+    "premium": [
+      [
+        1151,
+        100.0,
+        0
+      ],
+      [
+        1147,
+        99.7,
+        0.3
+      ],
+      [
+        1057,
+        91.8,
+        7.8
+      ],
+      [
+        1032,
+        89.7,
+        2.4
+      ],
+      [
+        1029,
+        89.4,
+        0.3
+      ],
+      [
+        999,
+        86.8,
+        2.9
+      ],
+      [
+        992,
+        86.2,
+        0.7
+      ]
+    ]
+  },
+  "cliffIndex": {
+    "all": 4,
+    "free": 4,
+    "premium": -1
+  },
+  "abandon": [
+    [
+      "picker_cancel",
+      3664,
+      "crit"
+    ],
+    [
+      "result_back",
+      3327,
+      "warn"
+    ],
+    [
+      "generating_cancel",
+      82,
+      "muted"
+    ]
+  ],
+  "actions": [
+    [
+      "back",
+      1093,
+      "warn"
+    ],
+    [
+      "save",
+      593,
+      "good"
+    ],
+    [
+      "fullscreen",
+      575,
+      "all"
+    ],
+    [
+      "share",
+      334,
+      "free"
+    ],
+    [
+      "report",
+      138,
+      "crit"
+    ]
+  ],
+  "save": [
+    [
+      "success",
+      2403,
+      "good"
+    ],
+    [
+      "failed",
+      41,
+      "warn"
+    ],
+    [
+      "permission_denied",
+      13,
+      "crit"
+    ]
+  ],
+  "share": [
+    [
+      "failed",
+      716,
+      "crit"
+    ],
+    [
+      "success",
+      129,
+      "good"
+    ],
+    [
+      "dismiss",
+      21,
+      "warn"
+    ]
+  ],
+  "engage": [
+    [
+      "Save",
+      33,
+      55
+    ],
+    [
+      "Share",
+      19,
+      31
+    ]
+  ],
+  "daily": [
+    [
+      "2026-08-12",
+      574
+    ],
+    [
+      "2026-08-13",
+      473
+    ],
+    [
+      "2026-08-14",
+      453
+    ],
+    [
+      "2026-08-15",
+      372
+    ],
+    [
+      "2026-08-16",
+      429
+    ],
+    [
+      "2026-08-17",
+      388
+    ],
+    [
+      "2026-08-18",
+      238
+    ]
+  ],
+  "retention": {
+    "one_day": 1805,
+    "two_plus": 466,
+    "two_plus_pct": 20.5
+  },
+  "reentry": {
+    "explore_live_activity_start": 950,
+    "explore_try_resume": 685,
+    "explore_try_minimize": 658,
+    "explore_notification_tap": 324
+  },
+  "browse_only_pct": 28.1,
+  "retry": {
+    "triers": 1595,
+    "retried": 1302,
+    "retried_pct": 82,
+    "avg_tries": 7.9,
+    "max_tries": 143,
+    "total_tries": 12639,
+    "dist": [
+      [
+        "1",
+        293
+      ],
+      [
+        "2",
+        196
+      ],
+      [
+        "3",
+        189
+      ],
+      [
+        "4\u20135",
+        262
+      ],
+      [
+        "6\u20139",
+        263
+      ],
+      [
+        "10\u201319",
+        255
+      ],
+      [
+        "20+",
+        137
+      ]
+    ],
+    "seg": {
+      "free": [
+        144,
+        113,
+        78
+      ],
+      "premium": [
+        999,
+        950,
+        95
+      ]
+    },
+    "free_blocked_pct": 70,
+    "continue": [
+      [
+        "Saved / shared",
+        91,
+        1944,
+        2148,
+        "good"
+      ],
+      [
+        "Reached a result",
+        89,
+        5666,
+        6399,
+        "free"
+      ],
+      [
+        "Backed out / abandoned",
+        92,
+        8769,
+        9550,
+        "warn"
+      ],
+      [
+        "No result",
+        86,
+        5378,
+        6240,
+        "muted"
+      ]
+    ]
+  },
+  "styles": {
+    "categories": [
+      [
+        "Birthday",
+        651
+      ],
+      [
+        "Celebration & Holiday",
+        548
+      ],
+      [
+        "More Trends",
+        527
+      ],
+      [
+        "Anime & Pop-culture",
+        429
+      ],
+      [
+        "Celebrity & Idol",
+        298
+      ],
+      [
+        "Travel & Places",
+        223
+      ],
+      [
+        "Family & Kids",
+        214
+      ],
+      [
+        "Fashion & Photoshoot",
+        197
+      ],
+      [
+        "Horror & Spooky",
+        183
+      ],
+      [
+        "Black & White",
+        179
+      ],
+      [
+        "Most Use",
+        173
+      ],
+      [
+        "Mini Version",
+        160
+      ],
+      [
+        "Retro & Vintage",
+        146
+      ],
+      [
+        "Still My Dog",
+        141
+      ],
+      [
+        "Banner",
+        133
+      ],
+      [
+        "Sports & World Cup",
+        120
+      ],
+      [
+        "Cars & Vehicles",
+        114
+      ],
+      [
+        "Beauty & Retouch",
+        63
+      ],
+      [
+        "Loved Ones",
+        56
+      ]
+    ],
+    "top": [
+      [
+        "cmso6zi2203paxfgeyifnjb99",
+        "Birthday",
+        498,
+        408,
+        389
+      ],
+      [
+        "cmso6zhuy0061kv3p78fn1x57",
+        "Uncategorised",
+        455,
+        364,
+        346
+      ],
+      [
+        "cms4vli0f0exzwlkc5n7lohps",
+        "Celebration & Holiday",
+        286,
+        237,
+        232
+      ],
+      [
+        "cms6wvrt100icd4xvpak0o3yf",
+        "Uncategorised",
+        237,
+        167,
+        158
+      ],
+      [
+        "cmsnb5le300p2xfgekwhi9ku8",
+        "More Trends",
+        134,
+        88,
+        83
+      ],
+      [
+        "cmsnb5l3900oxxfgei6hdod38",
+        "More Trends",
+        99,
+        71,
+        60
+      ],
+      [
+        "cms4vlk380bpyqyue21gkes02",
+        "Celebration & Holiday",
+        94,
+        68,
+        63
+      ],
+      [
+        "cmso6zhba005rkv3ptzlag8wt",
+        "Mini Version",
+        93,
+        62,
+        57
+      ],
+      [
+        "cmsnb5kr105p8f42k0lnsdnh5",
+        "More Trends",
+        93,
+        46,
+        38
+      ],
+      [
+        "cms4vkohb01lr10fjksx8eaxq",
+        "Celebrity & Idol",
+        90,
+        53,
+        48
+      ],
+      [
+        "cms6ww1wy00kzd4xvaatau5e8",
+        "More Trends",
+        83,
+        64,
+        62
+      ],
+      [
+        "cms4vkxxu01o410fjx2syt2nh",
+        "Fashion & Photoshoot",
+        82,
+        60,
+        58
+      ],
+      [
+        "cms4e4wl20dwswlkclpeyuead",
+        "Banner",
+        79,
+        36,
+        32
+      ],
+      [
+        "cms6wvu8004h810fjddo0j70l",
+        "Celebration & Holiday",
+        77,
+        59,
+        59
+      ],
+      [
+        "cms4d9kwz0du7wlkcum7d6xbo",
+        "Travel & Places",
+        76,
+        47,
+        43
+      ]
+    ],
+    "distinct": 621
+  },
+  "fails": {
+    "summary": {
+      "gen_fail_rate_event": 10.8,
+      "gen_fail_rate_user": 20.3,
+      "gen_fails_total": 837,
+      "gen_fails_users": 242,
+      "share_fail_rate": 82.7,
+      "share_fails_total": 716,
+      "share_fails_users": 304,
+      "share_dismiss_total": 21,
+      "share_dismiss_rate": 2.4,
+      "feed_error_rate_user": 5.9,
+      "feed_error_rate_open": 1.8,
+      "feed_errors_total": 188,
+      "feed_errors_users": 133,
+      "la_fail_rate": 9.6,
+      "la_fails_total": 1297,
+      "save_fail_rate": 2.2,
+      "save_fails_total": 54
+    },
+    "generation": {
+      "starts": 7752,
+      "start_users": 1192,
+      "fails": 837,
+      "fail_users": 242,
+      "event_fail_rate": 10.8,
+      "user_fail_rate": 20.3,
+      "free": [
+        163,
+        16,
+        9.8
+      ],
+      "premium": [
+        1029,
+        226,
+        22.0
+      ],
+      "error_codes": [
+        [
+          "3002",
+          12,
+          "warn"
+        ],
+        [
+          "3001",
+          9,
+          "crit"
+        ],
+        [
+          "503",
+          3,
+          "crit"
+        ]
+      ],
+      "median_tta_sec": 0.7,
+      "avg_tta_sec": 150.4,
+      "onscreen_recovery_pct": 96
+    },
+    "feed": {
+      "views": 10316,
+      "errors": 188,
+      "users": 133,
+      "user_rate": 5.9,
+      "open_rate": 1.8,
+      "types": [
+        [
+          "fetch_failed",
+          128,
+          "crit"
+        ],
+        [
+          "no_internet",
+          60,
+          "warn"
+        ]
+      ]
+    },
+    "actions": {
+      "save": {
+        "total": 2457,
+        "success": 2403,
+        "fails": 54,
+        "fail_rate": 2.2
+      },
+      "share": {
+        "total": 866,
+        "success": 129,
+        "failed": 716,
+        "dismiss": 21,
+        "fail_rate": 82.7,
+        "dismiss_rate": 2.4
+      }
+    },
+    "live_activity": {
+      "total": 13569,
+      "completed": 12272,
+      "failed": 1297,
+      "fail_rate": 9.6
+    },
+    "daily_rates": [
+      {
+        "date": "2026-08-12",
+        "gen_starts": 1498,
+        "gen_fails": 16,
+        "gen_fail_rate": 1.1,
+        "feed_views": 2302,
+        "feed_errors": 38,
+        "feed_error_rate": 1.7,
+        "share_attempts": 183,
+        "share_fails": 139,
+        "share_dismiss": 11,
+        "share_fail_rate": 76.0,
+        "save_attempts": 459,
+        "save_fails": 15,
+        "save_fail_rate": 3.3,
+        "la_total": 2702,
+        "la_fails": 181,
+        "la_fail_rate": 6.7
+      },
+      {
+        "date": "2026-08-13",
+        "gen_starts": 1185,
+        "gen_fails": 0,
+        "gen_fail_rate": 0.0,
+        "feed_views": 1601,
+        "feed_errors": 31,
+        "feed_error_rate": 1.9,
+        "share_attempts": 111,
+        "share_fails": 101,
+        "share_dismiss": 2,
+        "share_fail_rate": 91.0,
+        "save_attempts": 424,
+        "save_fails": 11,
+        "save_fail_rate": 2.6,
+        "la_total": 2131,
+        "la_fails": 122,
+        "la_fail_rate": 5.7
+      },
+      {
+        "date": "2026-08-14",
+        "gen_starts": 1038,
+        "gen_fails": 35,
+        "gen_fail_rate": 3.4,
+        "feed_views": 1551,
+        "feed_errors": 30,
+        "feed_error_rate": 1.9,
+        "share_attempts": 129,
+        "share_fails": 104,
+        "share_dismiss": 0,
+        "share_fail_rate": 80.6,
+        "save_attempts": 319,
+        "save_fails": 4,
+        "save_fail_rate": 1.3,
+        "la_total": 1881,
+        "la_fails": 131,
+        "la_fail_rate": 7.0
+      },
+      {
+        "date": "2026-08-15",
+        "gen_starts": 1100,
+        "gen_fails": 99,
+        "gen_fail_rate": 9.0,
+        "feed_views": 1311,
+        "feed_errors": 13,
+        "feed_error_rate": 1.0,
+        "share_attempts": 125,
+        "share_fails": 102,
+        "share_dismiss": 2,
+        "share_fail_rate": 81.6,
+        "save_attempts": 392,
+        "save_fails": 5,
+        "save_fail_rate": 1.3,
+        "la_total": 1998,
+        "la_fails": 152,
+        "la_fail_rate": 7.6
+      },
+      {
+        "date": "2026-08-16",
+        "gen_starts": 1136,
+        "gen_fails": 129,
+        "gen_fail_rate": 11.4,
+        "feed_views": 1479,
+        "feed_errors": 31,
+        "feed_error_rate": 2.1,
+        "share_attempts": 161,
+        "share_fails": 128,
+        "share_dismiss": 2,
+        "share_fail_rate": 79.5,
+        "save_attempts": 399,
+        "save_fails": 12,
+        "save_fail_rate": 3.0,
+        "la_total": 2014,
+        "la_fails": 138,
+        "la_fail_rate": 6.9
+      },
+      {
+        "date": "2026-08-17",
+        "gen_starts": 1032,
+        "gen_fails": 200,
+        "gen_fail_rate": 19.4,
+        "feed_views": 1326,
+        "feed_errors": 31,
+        "feed_error_rate": 2.3,
+        "share_attempts": 83,
+        "share_fails": 75,
+        "share_dismiss": 4,
+        "share_fail_rate": 90.4,
+        "save_attempts": 297,
+        "save_fails": 6,
+        "save_fail_rate": 2.0,
+        "la_total": 1759,
+        "la_fails": 208,
+        "la_fail_rate": 11.8
+      },
+      {
+        "date": "2026-08-18",
+        "gen_starts": 763,
+        "gen_fails": 358,
+        "gen_fail_rate": 46.9,
+        "feed_views": 746,
+        "feed_errors": 14,
+        "feed_error_rate": 1.9,
+        "share_attempts": 74,
+        "share_fails": 67,
+        "share_dismiss": 0,
+        "share_fail_rate": 90.5,
+        "save_attempts": 167,
+        "save_fails": 1,
+        "save_fail_rate": 0.6,
+        "la_total": 1084,
+        "la_fails": 365,
+        "la_fail_rate": 33.7
+      }
+    ],
+    "by_version": [
+      {
+        "version": "7.3.1",
+        "rows": 108035,
+        "gen_starts": 3816,
+        "gen_fails": 812,
+        "gen_fail_rate": 21.3,
+        "la_fails": 834,
+        "la_fail_rate": 12.9,
+        "share_fails": 362,
+        "share_fail_rate": 89.6
+      },
+      {
+        "version": "7.3.0",
+        "rows": 94559,
+        "gen_starts": 3656,
+        "gen_fails": 0,
+        "gen_fail_rate": 0.0,
+        "la_fails": 435,
+        "la_fail_rate": 6.6,
+        "share_fails": 353,
+        "share_fail_rate": 89.1
+      },
+      {
+        "version": "7.4.0",
+        "rows": 6253,
+        "gen_starts": 9,
+        "gen_fails": 1,
+        "gen_fail_rate": 11.1,
+        "la_fails": 1,
+        "la_fail_rate": 7.7,
+        "share_fails": 0,
+        "share_fail_rate": 0.0
+      },
+      {
+        "version": "7.2.0",
+        "rows": 4979,
+        "gen_starts": 271,
+        "gen_fails": 24,
+        "gen_fail_rate": 8.9,
+        "la_fails": 27,
+        "la_fail_rate": 5.2,
+        "share_fails": 1,
+        "share_fail_rate": 1.5
+      },
+      {
+        "version": "7.4.1",
+        "rows": 24,
+        "gen_starts": 0,
+        "gen_fails": 0,
+        "gen_fail_rate": 0.0,
+        "la_fails": 0,
+        "la_fail_rate": 0.0,
+        "share_fails": 0,
+        "share_fail_rate": 0.0
+      }
+    ],
+    "details_table": [
+      {
+        "stage": "Generation",
+        "event": "explore_generate_fail",
+        "error_type": "time_to_action (median 65s)",
+        "error_code": "\u2014",
+        "users": 232,
+        "rows": 813,
+        "rate": "10.5%",
+        "severity": "crit",
+        "notes": "Backend inference failure / generation timeout logged in app v7.3.1+. Spiked to ~11% on recent days."
+      },
+      {
+        "stage": "Generation",
+        "event": "explore_fail_onscreen_view",
+        "error_type": "On-screen fail dialog",
+        "error_code": "3001 / 3002 / 503",
+        "users": 9,
+        "rows": 23,
+        "rate": "0.3%",
+        "severity": "crit",
+        "notes": "Fail dialog shown while watching Generating screen (v7.2.0). 87% recovered via 'Back to Explore'."
+      },
+      {
+        "stage": "Result Action",
+        "event": "explore_try_result_action [share]",
+        "error_type": "status=failed",
+        "error_code": "\u2014",
+        "users": 304,
+        "rows": 716,
+        "rate": "82.7%",
+        "severity": "crit",
+        "notes": "Severe share-sheet crash or native UIActivityViewController export failure before completion."
+      },
+      {
+        "stage": "Result Action",
+        "event": "explore_try_result_action [share]",
+        "error_type": "status=dismiss",
+        "error_code": "\u2014",
+        "users": 7,
+        "rows": 21,
+        "rate": "2.4%",
+        "severity": "warn",
+        "notes": "User intentionally cancelled or dismissed the share sheet (not a technical failure)."
+      },
+      {
+        "stage": "Live Activity",
+        "event": "explore_live_activity_complete",
+        "error_type": "status=failed",
+        "error_code": "\u2014",
+        "users": 417,
+        "rows": 1297,
+        "rate": "9.6%",
+        "severity": "warn",
+        "notes": "Background Live Activity reached error state while app was minimized or in background."
+      },
+      {
+        "stage": "Feed Loading",
+        "event": "explore_error_view",
+        "error_type": "fetch_failed",
+        "error_code": "\u2014",
+        "users": 107,
+        "rows": 128,
+        "rate": "1.2%",
+        "severity": "crit",
+        "notes": "Explore catalog API response error, HTTP non-200, or invalid payload schema."
+      },
+      {
+        "stage": "Feed Loading",
+        "event": "explore_error_view",
+        "error_type": "no_internet",
+        "error_code": "\u2014",
+        "users": 32,
+        "rows": 60,
+        "rate": "0.6%",
+        "severity": "warn",
+        "notes": "Client offline when trying to open or refresh the Explore tab."
+      },
+      {
+        "stage": "Result Action",
+        "event": "explore_try_result_action [save]",
+        "error_type": "status=failed",
+        "error_code": "\u2014",
+        "users": 34,
+        "rows": 41,
+        "rate": "1.7%",
+        "severity": "warn",
+        "notes": "Video save/render to camera roll failed (disk space, encoding, or write error)."
+      },
+      {
+        "stage": "Result Action",
+        "event": "explore_try_result_action [save]",
+        "error_type": "permission_denied",
+        "error_code": "\u2014",
+        "users": 8,
+        "rows": 13,
+        "rate": "0.5%",
+        "severity": "crit",
+        "notes": "iOS Photo Library permission denied by user, preventing save to Camera Roll."
+      }
+    ]
+  },
+  "eventmap": [
+    [
+      "explore_filter_click",
+      "Switches category via pill / see-all",
+      930,
+      91091,
+      "support"
+    ],
+    [
+      "explore_style_click",
+      "Taps a style \u2014 start of a try (mints try_id)",
+      1591,
+      14088,
+      "funnel"
+    ],
+    [
+      "explore_live_activity_complete",
+      "Live Activity reaches final state",
+      1184,
+      13569,
+      "reentry"
+    ],
+    [
+      "explore_try_result_action",
+      "Taps a button on the result (save/share/\u2026)",
+      1127,
+      11738,
+      "funnel"
+    ],
+    [
+      "explore_view",
+      "Opens the Explore tab (once per visit)",
+      2266,
+      10316,
+      "funnel"
+    ],
+    [
+      "explore_complete",
+      "Leaves Explore (tab switch / background)",
+      1971,
+      9374,
+      "support"
+    ],
+    [
+      "explore_try_picker_select",
+      "Chose photo(s) in the picker",
+      1468,
+      8302,
+      "funnel"
+    ],
+    [
+      "explore_search_query",
+      "Types a search (debounced, length only)",
+      842,
+      7963,
+      "support"
+    ],
+    [
+      "explore_try_generate_start",
+      "Generating screen starts",
+      1192,
+      7752,
+      "funnel"
+    ],
+    [
+      "explore_try_abandon",
+      "Try ended with no result action (drop)",
+      1299,
+      7073,
+      "drop"
+    ],
+    [
+      "explore_try_result_view",
+      "Result screen shown",
+      1143,
+      6997,
+      "funnel"
+    ],
+    [
+      "explore_catalog_ready",
+      "Feed finished loading",
+      2214,
+      6383,
+      "funnel"
+    ],
+    [
+      "explore_live_activity_start",
+      "Live Activity begins (left app mid-gen)",
+      950,
+      6057,
+      "reentry"
+    ],
+    [
+      "explore_search_complete",
+      "Leaves the search screen",
+      907,
+      3757,
+      "support"
+    ],
+    [
+      "explore_try_minimize",
+      "Minimizes generating to the nav pill",
+      658,
+      2892,
+      "reentry"
+    ],
+    [
+      "explore_try_resume",
+      "Returns to a backgrounded gen",
+      685,
+      2404,
+      "reentry"
+    ],
+    [
+      "explore_search_open",
+      "Opens search (magnifier)",
+      931,
+      2030,
+      "support"
+    ],
+    [
+      "explore_notification_tap",
+      "Taps the completion push",
+      324,
+      963,
+      "reentry"
+    ],
+    [
+      "explore_generate_fail",
+      "Generation processing or inference failed",
+      232,
+      813,
+      "drop"
+    ],
+    [
+      "explore_error_view",
+      "Feed error (no-internet / empty / fetch-fail)",
+      133,
+      188,
+      "drop"
+    ],
+    [
+      "explore_fail_onscreen_complete",
+      "On-screen fail dialog closed",
+      9,
+      23,
+      "drop"
+    ],
+    [
+      "explore_fail_onscreen_view",
+      "Gen failed while watching Generating",
+      9,
+      23,
+      "drop"
+    ],
+    [
+      "explore_fail_onscreen_back_click",
+      "'Back to Explore' on fail dialog",
+      8,
+      22,
+      "drop"
+    ],
+    [
+      "explore_ready_view",
+      "'Ready' dialog when result finished off-screen",
+      5,
+      11,
+      "support"
+    ],
+    [
+      "explore_ready_complete",
+      "'Ready' dialog closed",
+      4,
+      10,
+      "support"
+    ],
+    [
+      "explore_ready_open_click",
+      "'View' on the ready dialog \u2192 result",
+      3,
+      9,
+      "support"
+    ],
+    [
+      "explore_fail_offscreen_complete",
+      "Off-screen fail dialog closed",
+      1,
+      1,
+      "drop"
+    ],
+    [
+      "explore_fail_offscreen_view",
+      "Gen failed while off the Generating screen",
+      1,
+      1,
+      "drop"
+    ]
+  ],
+  "meta": {
+    "feature": "Explore (302)",
+    "source": "BigQuery analytics_467542142 (direct)",
+    "window": "2026-08-12 \u2192 2026-08-18",
+    "total_rows": 213850,
+    "total_users": 2271,
+    "free_users": 1120,
+    "premium_users": 1151,
+    "app_version": "7.3.1",
+    "synced_at": "2026-08-18 09:47",
+    "pull_ok": true
+  }
+};</script>
+<style>#sync{display:none!important;}</style>
+<script src="echarts.min.js"></script>
+<script>
+let DATA=null;                       // filled by fetch('data.json'); refreshed by Sync
+let seg="all";
+const cvar=c=>`var(--${c})`;         // kept for inline HTML color refs
+const CV={all:"all",free:"free",premium:"prem"};   // segment key → color token
+
+/* ===== THEME BRIDGE — resolve OKLCH design tokens to concrete colors for ECharts =====
+   ECharts option colors must be real color strings (not var()), and zrender's emphasis
+   lightening parses colors — so we rasterize each token to an rgb()/rgba() via a 1px canvas.
+   That works for oklch(), survives theme flips, and never trips zrender's parser. */
+const _cvs=document.createElement("canvas");_cvs.width=_cvs.height=1;
+const _ctx=_cvs.getContext("2d",{willReadFrequently:true});
+function toRGB(color){
+  _ctx.clearRect(0,0,1,1);_ctx.fillStyle="#000";_ctx.fillStyle=color;_ctx.fillRect(0,0,1,1);
+  const[r,g,b,a]=_ctx.getImageData(0,0,1,1).data;
+  return a<255?`rgba(${r},${g},${b},${(a/255).toFixed(3)})`:`rgb(${r},${g},${b})`;
+}
+function tok(n){return getComputedStyle(document.documentElement).getPropertyValue("--"+n).trim();}
+const REDUCED=matchMedia("(prefers-reduced-motion:reduce)").matches;
+let TH={},TIP={};
+function theme(){
+  const g=n=>toRGB(tok(n));
+  TH={free:g("free"),prem:g("prem"),all:g("all"),good:g("good"),warn:g("warn"),crit:g("crit"),
+      ink:g("ink"),ink2:g("ink-2"),muted:g("muted"),surface:g("surface"),surface2:g("surface-2"),
+      track:g("track"),grid:g("grid"),border:g("border"),
+      mono:tok("mono"),sans:tok("sans")};
+  TIP={backgroundColor:TH.surface,borderColor:TH.border,borderWidth:1,
+       textStyle:{color:TH.ink,fontFamily:TH.sans,fontSize:12},
+       extraCssText:"border-radius:8px;box-shadow:0 6px 20px -12px rgba(0,0,0,.55);"};
+}
+// resolve a DATA color-token name ("good","warn","free","track","muted",…) to a concrete color
+function col(name){return TH[name==="ink-2"?"ink2":name==="surface-2"?"surface2":name]||toRGB(tok(name));}
+function base(){
+  return{animation:!REDUCED,animationDuration:450,
+    textStyle:{fontFamily:TH.sans,color:TH.ink2},
+    grid:{left:8,right:8,top:24,bottom:8,containLabel:true}};
+}
+const catAxis=extra=>Object.assign({type:"category",axisTick:{show:false},
+  axisLine:{lineStyle:{color:TH.border}},axisLabel:{color:TH.muted,fontFamily:TH.mono,fontSize:11}},extra);
+const valAxis=extra=>Object.assign({type:"value",axisLine:{show:false},axisTick:{show:false},
+  splitLine:{lineStyle:{color:TH.grid}},axisLabel:{color:TH.muted,fontFamily:TH.mono,fontSize:11}},extra);
+
+/* ===== ECharts instance registry ===== */
+const CHARTS={};
+function init(id){
+  const dom=document.getElementById(id);
+  let c=CHARTS[id];
+  if(!c||c.isDisposed()){c=echarts.init(dom,null,{renderer:"svg"});CHARTS[id]=c;}
+  return c;
+}
+
+/* ===== LINE CHART (3 series survival) ===== */
+function drawLine(){
+  const c=init("line-chart"),steps=DATA.steps;
+  const series=[["all","All",true],["free","Free",false],["premium","Premium",false]].map(([k,name,dash])=>{
+    const color=TH[CV[k]];
+    return{name,type:"line",z:k==="all"?2:3,
+      symbol:"circle",symbolSize:k==="all"?6:8,
+      lineStyle:{color,width:k==="all"?2:2.75,type:dash?"dashed":"solid"},
+      itemStyle:{color,borderColor:TH.surface,borderWidth:2},
+      emphasis:{focus:"series"},
+      endLabel:{show:true,color,fontFamily:TH.mono,fontWeight:700,fontSize:12.5,
+        formatter:o=>`${name} ${o.value}%`},
+      data:DATA.funnel[k].map(r=>r[1]),
+      ...(k==="all"?{markArea:{silent:true,itemStyle:{color:TH.crit,opacity:.07},
+        label:{show:true,position:"top",color:TH.crit,fontSize:10,fontWeight:700,formatter:"paywall"},
+        data:[[{xAxis:steps[3]},{xAxis:steps[4]}]]}}:{})};
+  });
+  c.setOption({...base(),
+    grid:{left:8,right:92,top:22,bottom:8,containLabel:true},
+    tooltip:{...TIP,trigger:"axis",valueFormatter:v=>v+"%"},
+    xAxis:catAxis({data:steps,boundaryGap:false,
+      axisLabel:{color:TH.muted,fontFamily:TH.mono,fontSize:10.5,interval:0,hideOverlap:true}}),
+    yAxis:valAxis({min:0,max:100,splitNumber:4,axisLabel:{color:TH.muted,fontFamily:TH.mono,formatter:"{value}%"}}),
+    series},true);
+}
+
+/* ===== FUNNEL CHART (toggle) ===== */
+function renderFunnel(){
+  const c=init("funnel-chart");
+  const rows=DATA.funnel[seg],cliff=DATA.cliffIndex[seg],color=TH[CV[seg]];
+  const data=rows.map((r,i)=>({name:DATA.steps[i],value:r[1],
+    _users:r[0],_pct:r[1],_drop:r[2],
+    itemStyle:{color,opacity:i===cliff?1:.9,
+      borderColor:i===cliff?TH.crit:"transparent",borderWidth:i===cliff?2:0}}));
+  c.setOption({...base(),
+    tooltip:{...TIP,trigger:"item",
+      formatter:p=>`${p.name}<br/>${p.data._users} users · ${p.data._pct}%`+
+        (p.dataIndex>0?` · ▼ ${p.data._drop}%`:"")},
+    series:[{type:"funnel",min:0,max:100,minSize:"0%",maxSize:"100%",sort:"none",gap:6,
+      top:10,bottom:10,left:"8%",right:"8%",
+      label:{show:true,position:"inside",color:"#fff",fontFamily:TH.mono,fontWeight:700,fontSize:12.5,
+        formatter:p=>`${p.data._users} · ${p.data._pct}%`},
+      labelLine:{show:false},emphasis:{label:{fontSize:13}},data}]},true);
+  // KPIs (segment-dependent → re-filled on toggle)
+  const first=rows[0][0],gen=rows[4][0],res=rows[5][0];
+  const genPct=(gen/first*100).toFixed(0),resPct=(res/first*100).toFixed(0);
+  const worst=rows.reduce((a,r,i)=>i>0&&r[2]>a.d?{d:r[2],l:DATA.steps[i]}:a,{d:0,l:""});
+  document.getElementById("funnel-kpis").innerHTML=`
+    <div class="kpi"><div class="n">${first}</div><div class="l">Opened Explore</div></div>
+    <div class="kpi"><div class="n">${genPct}%</div><div class="l">Reached generate</div>
+      <div class="d ${genPct<50?'bad':'ok'}">${seg==='free'?'stall at paywall':'of openers'}</div></div>
+    <div class="kpi"><div class="n">${resPct}%</div><div class="l">Saw a result</div></div>
+    <div class="kpi"><div class="n">−${worst.d}%</div><div class="l">Biggest single drop</div>
+      <div class="d bad">at ${worst.l}</div></div>`;
+}
+
+/* ===== RETRY / REPEAT GENERATION ===== */
+function drawRetryDist(){
+  const c=init("retry-dist"),d=DATA.retry.dist;
+  c.setOption({...base(),
+    tooltip:{...TIP,trigger:"axis",axisPointer:{type:"shadow"},
+      formatter:p=>{const x=p[0];return `${x.name} generation${x.name==="1"?"":"s"}<br/>${x.value} users`;}},
+    xAxis:catAxis({data:d.map(r=>r[0])}),
+    yAxis:valAxis({}),
+    series:[{type:"bar",barMaxWidth:44,
+      data:d.map(r=>({value:r[1],itemStyle:{color:r[0]==="1"?TH.track:TH.free,borderRadius:[5,5,0,0]}})),
+      label:{show:true,position:"top",color:TH.ink,fontFamily:TH.mono,fontWeight:700,fontSize:11.5}}]},true);
+}
+function drawRetryContinue(){
+  const c=init("retry-continue"),rr=DATA.retry.continue.slice().reverse();
+  c.setOption({...base(),
+    grid:{left:8,right:44,top:8,bottom:8,containLabel:true},
+    tooltip:{...TIP,trigger:"axis",axisPointer:{type:"shadow"},
+      formatter:p=>{const r=rr[p[0].dataIndex];
+        return `${r[0]}<br/>${r[2].toLocaleString()}/${r[3].toLocaleString()} → another try (${r[1]}%)`;}},
+    xAxis:valAxis({min:0,max:100,axisLabel:{show:false},splitLine:{lineStyle:{color:TH.grid}}}),
+    yAxis:catAxis({data:rr.map(r=>r[0]),axisLine:{show:false},
+      axisLabel:{color:TH.ink2,fontFamily:TH.sans,fontSize:11.5}}),
+    series:[{type:"bar",barMaxWidth:22,showBackground:true,backgroundStyle:{color:TH.track,borderRadius:4},
+      data:rr.map(r=>({value:r[1],itemStyle:{color:col(r[4]),borderRadius:4}})),
+      label:{show:true,position:"right",formatter:"{c}%",color:TH.ink,fontFamily:TH.mono,fontWeight:700,fontSize:12}}]},true);
+}
+function drawRetry(){
+  const R=DATA.retry;
+  document.getElementById("retry-kpis").innerHTML=`
+    <div class="kpi"><div class="n">${R.retried_pct}%</div><div class="l">Retried (≥2 gens)</div>
+      <div class="d ok">${R.retried} of ${R.triers} triers</div></div>
+    <div class="kpi"><div class="n">${R.avg_tries}</div><div class="l">Avg gens / user</div></div>
+    <div class="kpi"><div class="n">${R.max_tries}</div><div class="l">Most by one user</div></div>
+    <div class="kpi"><div class="n">${R.total_tries.toLocaleString()}</div><div class="l">Total generations</div></div>`;
+  const kept=R.continue[0][1],back=R.continue[2][1];
+  const freePct=R.seg.free[2],premPct=R.seg.premium[2],freeN=R.seg.free[0],premN=R.seg.premium[0];
+  const blocked=R.free_blocked_pct;
+  document.getElementById("retry-call-1").innerHTML=
+    `<div class="h">Success doesn't stop them</div>`+
+    `<div class="p">After a try they <b>saved/shared</b>, <span class="big">${kept}%</span> start another — `+
+    `and even after backing out, <b>${back}%</b> retry. The outcome barely moves whether they go again.</div>`;
+  document.getElementById("retry-call-2").innerHTML=
+    `<div class="h">The gate — not appetite — is the free story</div>`+
+    `<div class="p">Premium who reach a result almost always re-roll (<span class="big">${premPct}%</span>, ${premN}). `+
+    `Among the few free users who get that far (${freeN}), most do too (<b>${freePct}%</b>) — so re-roll appetite `+
+    `isn't the free problem. The real leak: <b>${blocked}%</b> of free triers never clear the generate paywall, `+
+    `so their attempts rarely finish.</div>`;
+  drawRetryDist();drawRetryContinue();
+}
+
+/* ===== HORIZONTAL BAR CHART ===== */
+function hbar(id,rows){
+  const c=init(id),rr=rows.slice().reverse();
+  c.setOption({...base(),
+    grid:{left:8,right:40,top:6,bottom:6,containLabel:true},
+    tooltip:{...TIP,trigger:"axis",axisPointer:{type:"shadow"},formatter:p=>`${p[0].name}: ${p[0].value}`},
+    xAxis:valAxis({splitLine:{show:false},axisLabel:{show:false}}),
+    yAxis:catAxis({data:rr.map(r=>r[0]),axisLine:{show:false},
+      axisLabel:{color:TH.ink2,fontFamily:TH.mono,fontSize:11.5}}),
+    series:[{type:"bar",barMaxWidth:22,showBackground:true,backgroundStyle:{color:TH.track,borderRadius:4},
+      data:rr.map(r=>({value:r[1],itemStyle:{color:col(r[2]),borderRadius:4}})),
+      label:{show:true,position:"right",color:TH.ink,fontFamily:TH.mono,fontWeight:700,fontSize:12}}]},true);
+}
+function drawBars(){
+  hbar("abandon-chart",DATA.abandon);
+  hbar("action-chart",DATA.actions);
+  
+  const fPick = DATA.funnel.free[3][1], fGen = DATA.funnel.free[4][1];
+  const pGen = DATA.funnel.premium[4][1];
+  const pcCnt = DATA.abandon.find(a=>a[0]==="picker_cancel")?.[1] || 0;
+  const c1 = document.getElementById("leak-call-1");
+  if(c1) c1.innerHTML = `Free funnel collapses <span class="big">${fPick}% → ${fGen}%</span> at pick-photo → generate; ` +
+    `premium passes at ${pGen}%. Dominant abandon: <code>picker_cancel</code> (${pcCnt.toLocaleString()}) — bailing off the paywall.`;
+  
+  const c2 = document.getElementById("leak-call-2");
+  if(c2) c2.innerHTML = `<span class="big">${DATA.browse_only_pct}%</span> who load the feed leave without tapping one style — ` +
+    `a content / merchandising gap.`;
+    
+  const backU = DATA.actions.find(a=>a[0]==="back")?.[1] || 0;
+  const saveU = DATA.actions.find(a=>a[0]==="save")?.[1] || 0;
+  const c3 = document.getElementById("leak-call-3");
+  if(c3) c3.innerHTML = `<span class="big">${backU} → ${saveU}</span> users tap <code>back</code> vs <code>save</code>. ` +
+    `The result screen isn't converting a view into a keep.`;
+}
+
+/* ===== DONUT (pie ring + center text) ===== */
+function donut(id,rows,centerTop,centerBot){
+  const c=init(id);
+  c.setOption({...base(),
+    tooltip:{...TIP,trigger:"item",formatter:p=>`${p.name}: ${p.value} (${p.percent}%)`},
+    title:{text:centerTop,subtext:centerBot,left:"center",top:"center",itemGap:2,
+      textStyle:{color:TH.ink,fontFamily:TH.mono,fontWeight:800,fontSize:30},
+      subtextStyle:{color:TH.muted,fontFamily:TH.sans,fontSize:12}},
+    series:[{type:"pie",radius:["60%","80%"],center:["50%","50%"],avoidLabelOverlap:false,
+      label:{show:false},labelLine:{show:false},emphasis:{scale:true,scaleSize:4},
+      data:rows.map(r=>({name:r[0],value:r[1],itemStyle:{color:col(r[2])}}))}]},true);
+}
+function legend(id,rows){document.getElementById(id).innerHTML=rows.map(([n,v,c])=>`<span><span class="sw ${c}"></span>${n} · ${v}</span>`).join("");}
+function pctOk(rows){const tot=rows.reduce((s,r)=>s+r[1],0);const ok=(rows.find(r=>r[0]==="success")||[0,0])[1];return tot?Math.round(ok/tot*100):0;}
+function drawDonuts(){
+  const saveTot = DATA.save.reduce((s,r)=>s+r[1],0);
+  const saveOk = pctOk(DATA.save);
+  const saveDenied = DATA.save.find(r=>r[0]==="permission_denied")?.[1] || 0;
+  const saveErr = DATA.save.find(r=>r[0]==="failed")?.[1] || 0;
+  donut("save-donut",DATA.save,saveOk+"%","land ok");legend("save-legend",DATA.save);
+  const sH3 = document.getElementById("save-h3");
+  if(sH3) sH3.innerHTML = `Save — ${saveOk >= 95 ? 'healthy' : 'leaky'} <span style="color:var(--${saveOk >= 95 ? 'good' : 'warn'})">${saveOk}% landed</span>`;
+  const sMap = document.getElementById("save-mapnote");
+  if(sMap) sMap.textContent = `action=save · ${saveTot.toLocaleString()} attempts`;
+  const sVer = document.getElementById("save-verdict");
+  if(sVer) sVer.innerHTML = `${saveOk}% land ok. ${saveDenied} permission blocks + ${saveErr} render fails.`;
+
+  const shareTot = DATA.share.reduce((s,r)=>s+r[1],0);
+  const shareOk = pctOk(DATA.share);
+  const shareFailedCnt = DATA.fails?.summary?.share_fails_total || (DATA.share.find(r=>r[0]==="failed")||[0,0])[1];
+  const shareDismissCnt = DATA.fails?.summary?.share_dismiss_total || (DATA.share.find(r=>r[0]==="dismiss")||[0,0])[1];
+  const shareFailPct = DATA.fails?.summary?.share_fail_rate || Math.round(shareFailedCnt / shareTot * 100);
+  donut("share-donut",DATA.share,shareOk+"%","land ok");legend("share-legend",DATA.share);
+  const shH3 = document.getElementById("share-h3");
+  if(shH3) shH3.innerHTML = `Share — broken <span style="color:var(--crit)">▲ ${shareFailPct}% fail (${DATA.fails?.summary?.share_dismiss_rate || 4.1}% dismiss)</span>`;
+  const shMap = document.getElementById("share-mapnote");
+  if(shMap) shMap.textContent = `action=share · ${shareTot.toLocaleString()} attempts`;
+  const shVer = document.getElementById("share-verdict");
+  if(shVer) shVer.innerHTML = `3 in 4 shares fail (${shareFailedCnt}) + ${shareDismissCnt} dismissed — critical export crash leak.`;
+
+  const rt=DATA.retention;
+  donut("ret-donut",[["Returned",rt.two_plus,"free"],["One-and-done",rt.one_day,"track"]],rt.two_plus_pct+"%","returned");
+  const rl=document.getElementById("ret-legend");
+  if(rl)rl.innerHTML=`<span><span class="sw" style="background:var(--free)"></span>Returned · ${rt.two_plus}</span>`
+    +`<span><span class="sw" style="background:var(--track)"></span>One-and-done · ${rt.one_day}</span>`;
+}
+
+/* ===== GROUPED BAR (engage) ===== */
+function drawEngage(){
+  const c=init("engage-chart"),g=DATA.engage;
+  const lbl={show:true,position:"top",formatter:"{c}%",color:TH.ink,fontFamily:TH.mono,fontWeight:700,fontSize:12.5};
+  c.setOption({...base(),
+    tooltip:{...TIP,trigger:"axis",axisPointer:{type:"shadow"},valueFormatter:v=>v+"%"},
+    xAxis:catAxis({data:g.map(r=>r[0]),
+      axisLabel:{color:TH.ink2,fontFamily:TH.sans,fontSize:12.5,fontWeight:600}}),
+    yAxis:valAxis({min:0,max:100,splitNumber:4,axisLabel:{color:TH.muted,fontFamily:TH.mono,formatter:"{value}%"}}),
+    series:[
+      {name:"Free",type:"bar",barMaxWidth:54,itemStyle:{color:TH.free,borderRadius:[4,4,0,0]},data:g.map(r=>r[1]),label:lbl},
+      {name:"Premium",type:"bar",barMaxWidth:54,itemStyle:{color:TH.prem,borderRadius:[4,4,0,0]},data:g.map(r=>r[2]),label:lbl}
+    ]},true);
+}
+
+/* ===== DAILY COLUMN ===== */
+function drawDaily(){
+  const c=init("daily-chart"),d=DATA.daily;
+  c.setOption({...base(),
+    tooltip:{...TIP,trigger:"axis",axisPointer:{type:"shadow"},formatter:p=>`${p[0].name}<br/>${p[0].value} users`},
+    xAxis:catAxis({data:d.map(r=>r[0].slice(5))}),
+    yAxis:valAxis({}),
+    series:[{type:"bar",barMaxWidth:46,itemStyle:{color:TH.free,borderRadius:[5,5,0,0]},data:d.map(r=>r[1]),
+      label:{show:true,position:"top",color:TH.ink,fontFamily:TH.mono,fontWeight:700,fontSize:12}}]},true);
+}
+
+/* ===== MOST-USED STYLES (category bar + top-15 table) ===== */
+function drawStyles(){
+  const c=init("cat-chart"),rr=DATA.styles.categories.slice().reverse();
+  c.setOption({...base(),
+    grid:{left:8,right:44,top:6,bottom:6,containLabel:true},
+    tooltip:{...TIP,trigger:"axis",axisPointer:{type:"shadow"},formatter:p=>`${p[0].name}: ${p[0].value} users`},
+    xAxis:valAxis({splitLine:{show:false},axisLabel:{show:false}}),
+    yAxis:catAxis({data:rr.map(r=>r[0]),axisLine:{show:false},
+      axisLabel:{color:TH.ink2,fontFamily:TH.sans,fontSize:11.5}}),
+    series:[{type:"bar",barMaxWidth:18,showBackground:true,backgroundStyle:{color:TH.track,borderRadius:4},
+      data:rr.map(r=>({value:r[1],itemStyle:{color:TH.free,borderRadius:4}})),
+      label:{show:true,position:"right",color:TH.ink,fontFamily:TH.mono,fontWeight:700,fontSize:12}}]},true);
+  document.getElementById("styles-tbl").innerHTML=DATA.styles.top.map((r,i)=>{
+    const[sid,cat,tap,gen,res]=r;
+    return `<tr><td class="num">${i+1}</td><td class="ev">…${sid.slice(-8)}</td><td>${cat}</td>`+
+      `<td class="num">${tap}</td><td class="num">${gen}</td><td class="num">${res}</td></tr>`;
+  }).join("");
+  const sd=document.getElementById("styles-distinct");
+  if(sd)sd.innerHTML=`<b style="color:var(--ink-2)">${DATA.styles.distinct}</b> distinct styles were tapped in the window.`;
+}
+
+/* ===== EVENT MAP (table) ===== */
+function drawEventmap(){
+  const roleName={funnel:"funnel",drop:"drop-off",reentry:"re-entry",support:"support"};
+  document.getElementById("eventmap").innerHTML=DATA.eventmap.map(([ev,mean,u,rw,role])=>
+    `<tr><td class="ev">${ev}</td><td>${mean}</td><td class="num">${u}</td><td class="num">${rw}</td>
+     <td><span class="role ${role}">${roleName[role]}</span></td></tr>`).join("");
+}
+
+/* ===== HEADER META ===== */
+function fillHeader(){
+  const m=DATA.meta;
+  document.getElementById("meta").innerHTML=
+    `<span><b>Source</b> ${m.source}</span>`
+    +`<span><b>Window</b> ${m.window}</span>`
+    +`<span><b>Users</b> ${m.total_users} (${m.free_users} free · ${m.premium_users} premium)</span>`
+    +`<span><b>Events</b> ${m.total_rows.toLocaleString()}</span>`
+    +`<span><b>App</b> v${m.app_version}</span>`;
+  const ren=DATA.reentry,rn=document.getElementById("reentry-note");
+  if(rn)rn.innerHTML=`Re-entry plumbing works — Live-Activity <b>${ren.explore_live_activity_start}</b>, `
+    +`resume <b>${ren.explore_try_resume}</b>, minimize <b>${ren.explore_try_minimize}</b>, `
+    +`notification taps <b>${ren.explore_notification_tap}</b> — the return paths exist; organic return doesn't yet.`;
+}
+
+/* ===== FAILURES & ERROR INTELLIGENCE ===== */
+function drawFailKpis(){
+  const f=DATA.fails, s=f.summary;
+  document.getElementById("fail-kpis").innerHTML=`
+    <div class="kpi">
+      <div class="n" style="color:var(--crit)">${s.gen_fail_rate_event}%</div>
+      <div class="l">Generation Fail Rate</div>
+      <div class="d bad">${s.gen_fails_total} fails · ${s.gen_fails_users} users (${s.gen_fail_rate_user}% triers)</div>
+    </div>
+    <div class="kpi">
+      <div class="n" style="color:var(--crit)">${s.share_fail_rate}%</div>
+      <div class="l">Share Fail Rate</div>
+      <div class="d bad">${s.share_fails_total} failed (${s.share_dismiss_total} dismissed) of ${f.actions.share.total}</div>
+    </div>
+    <div class="kpi">
+      <div class="n" style="color:var(--warn)">${s.feed_error_rate_user}%</div>
+      <div class="l">Feed Load Error Rate</div>
+      <div class="d bad">${s.feed_errors_total} errors · ${s.feed_errors_users} users (${s.feed_error_rate_open}% opens)</div>
+    </div>
+    <div class="kpi">
+      <div class="n" style="color:var(--warn)">${s.la_fail_rate}%</div>
+      <div class="l">Live Activity Fail Rate</div>
+      <div class="d bad">${s.la_fails_total} failed of ${f.live_activity.total.toLocaleString()} completes</div>
+    </div>`;
+}
+
+function drawFailDailyTrend(){
+  const c=init("fail-daily-chart"), d=DATA.fails.daily_rates;
+  const dates=d.map(r=>r.date.slice(5));
+  const series=[
+    {name:"Generation Fail %", type:"line", symbol:"circle", symbolSize:7,
+     lineStyle:{color:TH.crit, width:2.5}, itemStyle:{color:TH.crit, borderColor:TH.surface, borderWidth:2},
+     data:d.map(r=>r.gen_fail_rate)},
+    {name:"Share Fail %", type:"line", symbol:"circle", symbolSize:6,
+     lineStyle:{color:TH.warn, width:2, type:"dashed"}, itemStyle:{color:TH.warn, borderColor:TH.surface, borderWidth:2},
+     data:d.map(r=>r.share_fail_rate)},
+    {name:"Live Activity Fail %", type:"line", symbol:"circle", symbolSize:6,
+     lineStyle:{color:TH.good, width:2, type:"dotted"}, itemStyle:{color:TH.good, borderColor:TH.surface, borderWidth:2},
+     data:d.map(r=>r.la_fail_rate)},
+    {name:"Feed Error %", type:"line", symbol:"circle", symbolSize:6,
+     lineStyle:{color:TH.all, width:1.75, type:"dashed"}, itemStyle:{color:TH.all, borderColor:TH.surface, borderWidth:2},
+     data:d.map(r=>r.feed_error_rate)}
+  ];
+  c.setOption({...base(),
+    grid:{left:8,right:18,top:18,bottom:8,containLabel:true},
+    tooltip:{...TIP, trigger:"axis",
+      formatter:params=>{
+        const idx=params[0].dataIndex, row=d[idx];
+        let out=`<b>${row.date}</b><br/>`;
+        out+=`<span style="color:${TH.crit}">● Generation:</span> <b>${row.gen_fail_rate}%</b> (${row.gen_fails}/${row.gen_starts})<br/>`;
+        out+=`<span style="color:${TH.warn}">● Share Fail:</span> <b>${row.share_fail_rate}%</b> (${row.share_fails}/${row.share_attempts}${row.share_dismiss ? ' · ' + row.share_dismiss + ' dismissed' : ''})<br/>`;
+        out+=`<span style="color:${TH.good}">● Live Activity:</span> <b>${row.la_fail_rate}%</b> (${row.la_fails}/${row.la_total})<br/>`;
+        out+=`<span style="color:${TH.all}">● Feed Error:</span> <b>${row.feed_error_rate}%</b> (${row.feed_errors}/${row.feed_views})`;
+        return out;
+      }
+    },
+    xAxis:catAxis({data:dates}),
+    yAxis:valAxis({min:0, max:100, splitNumber:4, axisLabel:{color:TH.muted, fontFamily:TH.mono, formatter:"{value}%"}}),
+    series
+  }, true);
+}
+
+function drawFailBreakdowns(){
+  const g=DATA.fails.generation, fd=DATA.fails.feed;
+  
+  // Generation Error Codes Donut
+  const genCodes = g.error_codes.length ? g.error_codes : [["No error code (v7.3.1+ timeout)", g.fails - 41, "crit"], ["3001/3002/503 (v7.2.0)", 41, "warn"]];
+  donut("gen-err-donut", genCodes, g.fails.toString(), "gen fails");
+  legend("gen-err-legend", genCodes);
+  
+  const medEl=document.getElementById("gen-fail-median");
+  if(medEl)medEl.textContent = `${g.median_tta_sec}s`;
+  const avgEl=document.getElementById("gen-fail-avg");
+  if(avgEl)avgEl.textContent = `${g.avg_tta_sec}s`;
+  
+  const segEl=document.getElementById("gen-fail-seg-note");
+  if(segEl)segEl.innerHTML = 
+    `Premium user fail rate is <span class="big">${g.premium[2]}%</span> (${g.premium[1]}/${g.premium[0]} users) vs Free ` +
+    `<b>${g.free[2]}%</b> (${g.free[1]}/${g.free[0]} users) — higher premium fail rate reflects ${DATA.retry.avg_tries}× repeat volume per user. ` +
+    `Recovery: <b>${g.onscreen_recovery_pct}%</b> clicked 'Back to Explore' after fail dialog.`;
+
+  // Feed Error Types Donut
+  donut("feed-err-donut", fd.types, fd.errors.toString(), "feed errors");
+  legend("feed-err-legend", fd.types);
+  
+  const shF = DATA.fails.summary.share_fail_rate;
+  const shEl=document.getElementById("share-fail-call");
+  if(shEl)shEl.textContent = `${shF}%`;
+  const fErrEl=document.getElementById("feed-err-call");
+  if(fErrEl)fErrEl.textContent = fd.types.find(t=>t[0]==="fetch_failed")?.[1] || 128;
+  const fOffEl=document.getElementById("feed-offline-call");
+  if(fOffEl)fOffEl.textContent = fd.types.find(t=>t[0]==="no_internet")?.[1] || 78;
+}
+
+function drawFailDetailsTable(){
+  const rows = DATA.fails.details_table;
+  document.getElementById("fail-details-tbl").innerHTML = rows.map((r, i) => `
+    <tr>
+      <td><span class="stage-badge">${r.stage}</span></td>
+      <td class="ev">${r.event}</td>
+      <td><code>${r.error_type}</code></td>
+      <td class="num">${r.users}</td>
+      <td class="num">${r.rows}</td>
+      <td class="num" style="color:var(--${r.severity})">${r.rate}</td>
+      <td><span class="sev-pill ${r.severity}">${r.severity === "crit" ? "Critical" : "Warning"}</span></td>
+      <td style="font-size:12px;color:var(--ink-2)">${r.notes}</td>
+    </tr>
+  `).join("");
+}
+
+function drawFails(){
+  if(!DATA.fails) return;
+  drawFailKpis();
+  drawFailDailyTrend();
+  drawFailBreakdowns();
+  drawFailDetailsTable();
+}
+
+function drawAll(){
+  theme();
+  fillHeader();
+  drawLine();renderFunnel();drawFails();drawRetry();drawBars();drawDonuts();drawEngage();drawDaily();drawStyles();drawEventmap();
+}
+
+/* re-read tokens & redraw on theme flips; keep every instance sized to its box */
+window.addEventListener("resize",()=>{for(const k in CHARTS){const c=CHARTS[k];if(c&&!c.isDisposed())c.resize();}});
+matchMedia("(prefers-color-scheme:dark)").addEventListener("change",()=>{if(DATA)drawAll();});
+new MutationObserver(()=>{if(DATA)drawAll();}).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
+
+/* ===== BOOTSTRAP + SYNC ===== */
+function setStatus(msg,cls){const s=document.getElementById("sync-status");s.className="sync-status"+(cls?" "+cls:"");s.innerHTML=msg;}
+async function loadData(){if(window.__SNAPSHOT_DATA__)return window.__SNAPSHOT_DATA__;const r=await fetch("data.json",{cache:"no-store"});if(!r.ok)throw new Error("data.json "+r.status);return r.json();}
+
+document.querySelectorAll(".toggle button").forEach(b=>b.addEventListener("click",()=>{
+  seg=b.dataset.seg;document.querySelectorAll(".toggle button").forEach(x=>x.setAttribute("aria-pressed",x===b));renderFunnel();
+}));
+
+const syncBtn=document.getElementById("sync");
+syncBtn.addEventListener("click",async()=>{
+  syncBtn.disabled=true;syncBtn.setAttribute("aria-busy","true");setStatus("Pulling live export from BigQuery…");
+  try{
+    const res=await fetch("/api/sync",{method:"POST"});
+    const j=await res.json();
+    if(!res.ok||!j.ok)throw new Error(j.error||"sync failed");
+    DATA=await loadData();drawAll();
+    const pulled=j.pulled_rows!=null?`pulled ${Number(j.pulled_rows).toLocaleString()} rows`:"used cached export (live pull unavailable)";
+    setStatus(`<b>Synced</b> · ${DATA.meta.synced_at} · ${pulled}`,"ok");
+  }catch(e){
+    setStatus(`<b>Sync failed</b> · ${String(e.message||e)} — run <code>node server.js</code> and open via localhost`,"err");
+  }finally{syncBtn.disabled=false;syncBtn.setAttribute("aria-busy","false");}
+});
+
+loadData().then(d=>{DATA=d;drawAll();
+    setStatus(`<b>Loaded</b> · synced ${d.meta.synced_at} · ${d.meta.total_users} users · ${d.meta.total_rows.toLocaleString()} events`,"ok");})
+  .catch(e=>setStatus(`<b>Could not load data.json</b> · ${String(e.message||e)} — open via <code>node server.js</code>, not file://`,"err"));
+</script>
