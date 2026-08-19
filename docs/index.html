@@ -242,8 +242,8 @@
     <!-- Diagnostic Breakdowns -->
     <div class="health-grid" style="margin-top:22px">
       <div>
-        <h3>Generation Errors &amp; Timeouts</h3>
-        <div class="mapnote">Error codes &amp; duration distribution</div>
+        <h3>Generation Fail Reasons &amp; Timeouts</h3>
+        <div class="mapnote">Error codes (deduped by try_id) &amp; fail duration</div>
         <div id="gen-err-donut" class="chart" style="height:200px" role="img" aria-label="Generation error codes donut"></div>
         <div class="legend" id="gen-err-legend"></div>
         <div class="callouts" style="grid-template-columns:1fr;margin-top:12px">
@@ -426,113 +426,113 @@
   "funnel": {
     "all": [
       [
-        2266,
+        2139,
         100.0,
         0
       ],
       [
-        2214,
-        97.7,
-        2.3
+        2086,
+        97.5,
+        2.5
       ],
       [
-        1591,
-        70.2,
-        28.1
+        1487,
+        69.5,
+        28.7
       ],
       [
-        1468,
-        64.8,
-        7.7
+        1368,
+        64.0,
+        8.0
       ],
       [
-        1192,
-        52.6,
-        18.8
+        1109,
+        51.8,
+        18.9
       ],
       [
-        1143,
-        50.4,
-        4.1
+        1051,
+        49.1,
+        5.2
       ],
       [
-        1127,
-        49.7,
-        1.4
+        1040,
+        48.6,
+        1.0
       ]
     ],
     "free": [
       [
-        1115,
+        1084,
         100.0,
         0
       ],
       [
-        1067,
-        95.7,
-        4.3
+        1039,
+        95.8,
+        4.2
       ],
       [
-        534,
-        47.9,
-        50.0
+        514,
+        47.4,
+        50.5
       ],
       [
-        436,
-        39.1,
-        18.4
+        419,
+        38.7,
+        18.5
       ],
       [
-        163,
-        14.6,
-        62.6
+        161,
+        14.9,
+        61.6
       ],
       [
-        144,
-        12.9,
-        11.7
+        143,
+        13.2,
+        11.2
       ],
       [
-        135,
-        12.1,
-        6.3
+        136,
+        12.5,
+        4.9
       ]
     ],
     "premium": [
       [
-        1151,
+        1055,
         100.0,
         0
       ],
       [
-        1147,
-        99.7,
-        0.3
+        1047,
+        99.2,
+        0.8
       ],
       [
-        1057,
-        91.8,
-        7.8
+        973,
+        92.2,
+        7.1
       ],
       [
-        1032,
-        89.7,
-        2.4
+        949,
+        90.0,
+        2.5
       ],
       [
-        1029,
-        89.4,
-        0.3
+        948,
+        89.9,
+        0.1
       ],
       [
-        999,
-        86.8,
-        2.9
+        908,
+        86.1,
+        4.2
       ],
       [
-        992,
-        86.2,
-        0.7
+        904,
+        85.7,
+        0.4
       ]
     ]
   },
@@ -544,98 +544,94 @@
   "abandon": [
     [
       "picker_cancel",
-      3664,
+      3492,
       "crit"
     ],
     [
       "result_back",
-      3327,
+      3047,
       "warn"
     ],
     [
       "generating_cancel",
-      82,
+      73,
       "muted"
     ]
   ],
   "actions": [
     [
       "back",
-      1093,
+      1011,
       "warn"
     ],
     [
       "save",
-      593,
+      539,
       "good"
     ],
     [
       "fullscreen",
-      575,
+      537,
       "all"
     ],
     [
       "share",
-      334,
+      295,
       "free"
     ],
     [
       "report",
-      138,
+      122,
       "crit"
     ]
   ],
   "save": [
     [
       "success",
-      2403,
+      2304,
       "good"
     ],
     [
       "failed",
-      41,
+      36,
       "warn"
     ],
     [
       "permission_denied",
-      13,
+      8,
       "crit"
     ]
   ],
   "share": [
     [
       "failed",
-      716,
+      676,
       "crit"
     ],
     [
       "success",
-      129,
+      106,
       "good"
     ],
     [
       "dismiss",
-      21,
+      10,
       "warn"
     ]
   ],
   "engage": [
     [
       "Save",
-      33,
+      30,
       55
     ],
     [
       "Share",
       19,
-      31
+      30
     ]
   ],
   "daily": [
-    [
-      "2026-08-12",
-      574
-    ],
     [
       "2026-08-13",
       473
@@ -646,11 +642,11 @@
     ],
     [
       "2026-08-15",
-      372
+      373
     ],
     [
       "2026-08-16",
-      429
+      430
     ],
     [
       "2026-08-17",
@@ -658,98 +654,102 @@
     ],
     [
       "2026-08-18",
-      238
+      428
+    ],
+    [
+      "2026-08-19",
+      216
     ]
   ],
   "retention": {
-    "one_day": 1805,
-    "two_plus": 466,
-    "two_plus_pct": 20.5
+    "one_day": 1696,
+    "two_plus": 445,
+    "two_plus_pct": 20.8
   },
   "reentry": {
-    "explore_live_activity_start": 950,
-    "explore_try_resume": 685,
-    "explore_try_minimize": 658,
-    "explore_notification_tap": 324
+    "explore_live_activity_start": 877,
+    "explore_try_resume": 607,
+    "explore_try_minimize": 582,
+    "explore_notification_tap": 279
   },
-  "browse_only_pct": 28.1,
+  "browse_only_pct": 28.7,
   "retry": {
-    "triers": 1595,
-    "retried": 1302,
-    "retried_pct": 82,
-    "avg_tries": 7.9,
-    "max_tries": 143,
-    "total_tries": 12639,
+    "triers": 1493,
+    "retried": 1233,
+    "retried_pct": 83,
+    "avg_tries": 8.3,
+    "max_tries": 206,
+    "total_tries": 12412,
     "dist": [
       [
         "1",
-        293
+        260
       ],
       [
         "2",
-        196
+        198
       ],
       [
         "3",
-        189
+        166
       ],
       [
         "4\u20135",
-        262
+        250
       ],
       [
         "6\u20139",
-        263
+        252
       ],
       [
         "10\u201319",
-        255
+        231
       ],
       [
         "20+",
-        137
+        136
       ]
     ],
     "seg": {
       "free": [
-        144,
-        113,
-        78
+        143,
+        116,
+        81
       ],
       "premium": [
-        999,
-        950,
+        907,
+        864,
         95
       ]
     },
-    "free_blocked_pct": 70,
+    "free_blocked_pct": 69,
     "continue": [
       [
         "Saved / shared",
         91,
-        1944,
-        2148,
+        1872,
+        2055,
         "good"
       ],
       [
         "Reached a result",
         89,
-        5666,
-        6399,
+        5287,
+        5937,
         "free"
       ],
       [
         "Backed out / abandoned",
         92,
-        8769,
-        9550,
+        8260,
+        8961,
         "warn"
       ],
       [
         "No result",
-        86,
-        5378,
-        6240,
+        87,
+        5632,
+        6475,
         "muted"
       ]
     ]
@@ -758,309 +758,292 @@
     "categories": [
       [
         "Birthday",
-        651
+        617
       ],
       [
         "Celebration & Holiday",
-        548
+        526
       ],
       [
         "More Trends",
-        527
+        464
       ],
       [
         "Anime & Pop-culture",
-        429
+        397
       ],
       [
         "Celebrity & Idol",
-        298
+        281
       ],
       [
         "Travel & Places",
-        223
+        200
       ],
       [
         "Family & Kids",
-        214
+        193
       ],
       [
         "Fashion & Photoshoot",
-        197
-      ],
-      [
-        "Horror & Spooky",
-        183
-      ],
-      [
-        "Black & White",
-        179
-      ],
-      [
-        "Most Use",
         173
       ],
       [
         "Mini Version",
-        160
+        170
       ],
       [
-        "Retro & Vintage",
+        "Horror & Spooky",
+        162
+      ],
+      [
+        "Black & White",
+        161
+      ],
+      [
+        "Most Use",
         146
       ],
       [
+        "Retro & Vintage",
+        134
+      ],
+      [
         "Still My Dog",
-        141
+        129
       ],
       [
         "Banner",
-        133
-      ],
-      [
-        "Sports & World Cup",
-        120
+        119
       ],
       [
         "Cars & Vehicles",
-        114
+        118
       ],
       [
-        "Beauty & Retouch",
-        63
+        "Sports & World Cup",
+        103
       ],
       [
         "Loved Ones",
-        56
+        60
+      ],
+      [
+        "Beauty & Retouch",
+        57
       ]
     ],
     "top": [
       [
         "cmso6zi2203paxfgeyifnjb99",
         "Birthday",
-        498,
-        408,
-        389
+        447,
+        369,
+        353
       ],
       [
         "cmso6zhuy0061kv3p78fn1x57",
-        "Uncategorised",
-        455,
-        364,
-        346
+        "Birthday",
+        400,
+        324,
+        310
       ],
       [
         "cms4vli0f0exzwlkc5n7lohps",
         "Celebration & Holiday",
-        286,
-        237,
-        232
+        271,
+        218,
+        213
       ],
       [
         "cms6wvrt100icd4xvpak0o3yf",
-        "Uncategorised",
-        237,
-        167,
-        158
+        "Celebration & Holiday",
+        214,
+        152,
+        143
+      ],
+      [
+        "cmsx0tqct00qnknujjp22iavy",
+        "Birthday",
+        115,
+        96,
+        0
+      ],
+      [
+        "cmsx0tpox06r92feo8fpm13tq",
+        "Birthday",
+        112,
+        91,
+        0
       ],
       [
         "cmsnb5le300p2xfgekwhi9ku8",
         "More Trends",
-        134,
-        88,
-        83
-      ],
-      [
-        "cmsnb5l3900oxxfgei6hdod38",
-        "More Trends",
-        99,
-        71,
-        60
-      ],
-      [
-        "cms4vlk380bpyqyue21gkes02",
-        "Celebration & Holiday",
-        94,
+        108,
         68,
         63
       ],
       [
         "cmso6zhba005rkv3ptzlag8wt",
         "Mini Version",
-        93,
-        62,
-        57
+        86,
+        58,
+        53
       ],
       [
         "cmsnb5kr105p8f42k0lnsdnh5",
         "More Trends",
-        93,
-        46,
-        38
+        85,
+        45,
+        37
+      ],
+      [
+        "cms4vlk380bpyqyue21gkes02",
+        "Celebration & Holiday",
+        84,
+        62,
+        57
+      ],
+      [
+        "cmsnb5l3900oxxfgei6hdod38",
+        "More Trends",
+        82,
+        58,
+        52
       ],
       [
         "cms4vkohb01lr10fjksx8eaxq",
         "Celebrity & Idol",
-        90,
-        53,
-        48
+        81,
+        50,
+        45
       ],
       [
-        "cms6ww1wy00kzd4xvaatau5e8",
-        "More Trends",
-        83,
-        64,
-        62
+        "cmso6zhhy03p5xfgeqz4qb112",
+        "Mini Version",
+        75,
+        27,
+        27
       ],
       [
         "cms4vkxxu01o410fjx2syt2nh",
         "Fashion & Photoshoot",
-        82,
-        60,
-        58
+        74,
+        54,
+        52
       ],
       [
         "cms4e4wl20dwswlkclpeyuead",
         "Banner",
-        79,
-        36,
-        32
-      ],
-      [
-        "cms6wvu8004h810fjddo0j70l",
-        "Celebration & Holiday",
-        77,
-        59,
-        59
-      ],
-      [
-        "cms4d9kwz0du7wlkcum7d6xbo",
-        "Travel & Places",
-        76,
-        47,
-        43
+        74,
+        33,
+        31
       ]
     ],
-    "distinct": 621
+    "distinct": 627
   },
   "fails": {
     "summary": {
-      "gen_fail_rate_event": 10.8,
-      "gen_fail_rate_user": 20.3,
-      "gen_fails_total": 837,
-      "gen_fails_users": 242,
-      "share_fail_rate": 82.7,
-      "share_fails_total": 716,
-      "share_fails_users": 304,
-      "share_dismiss_total": 21,
-      "share_dismiss_rate": 2.4,
-      "feed_error_rate_user": 5.9,
+      "gen_fail_rate_event": 19.2,
+      "gen_fail_rate_user": 31.7,
+      "gen_fails_total": 1500,
+      "gen_fails_users": 352,
+      "share_fail_rate": 85.4,
+      "share_fails_total": 676,
+      "share_fails_users": 274,
+      "share_dismiss_total": 10,
+      "share_dismiss_rate": 1.3,
+      "feed_error_rate_user": 5.7,
       "feed_error_rate_open": 1.8,
-      "feed_errors_total": 188,
-      "feed_errors_users": 133,
-      "la_fail_rate": 9.6,
-      "la_fails_total": 1297,
-      "save_fail_rate": 2.2,
-      "save_fails_total": 54
+      "feed_errors_total": 171,
+      "feed_errors_users": 123,
+      "la_fail_rate": 13.7,
+      "la_fails_total": 1809,
+      "save_fail_rate": 1.9,
+      "save_fails_total": 44
     },
     "generation": {
-      "starts": 7752,
-      "start_users": 1192,
-      "fails": 837,
-      "fail_users": 242,
-      "event_fail_rate": 10.8,
-      "user_fail_rate": 20.3,
+      "starts": 7799,
+      "start_users": 1109,
+      "fails": 1500,
+      "fail_users": 352,
+      "fail_events_raw": 1500,
+      "fail_units": 1500,
+      "event_fail_rate": 19.2,
+      "user_fail_rate": 31.7,
       "free": [
-        163,
-        16,
-        9.8
+        161,
+        25,
+        15.5
       ],
       "premium": [
-        1029,
-        226,
-        22.0
+        948,
+        327,
+        34.5
       ],
       "error_codes": [
         [
-          "3002",
-          12,
-          "warn"
-        ],
-        [
           "3001",
-          9,
+          4,
           "crit"
         ],
         [
+          "3002",
+          2,
+          "warn"
+        ],
+        [
           "503",
-          3,
+          2,
           "crit"
         ]
       ],
       "median_tta_sec": 0.7,
-      "avg_tta_sec": 150.4,
-      "onscreen_recovery_pct": 96
+      "avg_tta_sec": 104.6,
+      "onscreen_recovery_pct": 86
     },
     "feed": {
-      "views": 10316,
-      "errors": 188,
-      "users": 133,
-      "user_rate": 5.9,
+      "views": 9503,
+      "errors": 171,
+      "users": 123,
+      "user_rate": 5.7,
       "open_rate": 1.8,
       "types": [
         [
           "fetch_failed",
-          128,
+          117,
           "crit"
         ],
         [
           "no_internet",
-          60,
+          54,
           "warn"
         ]
       ]
     },
     "actions": {
       "save": {
-        "total": 2457,
-        "success": 2403,
-        "fails": 54,
-        "fail_rate": 2.2
+        "total": 2348,
+        "success": 2304,
+        "fails": 44,
+        "fail_rate": 1.9
       },
       "share": {
-        "total": 866,
-        "success": 129,
-        "failed": 716,
-        "dismiss": 21,
-        "fail_rate": 82.7,
-        "dismiss_rate": 2.4
+        "total": 792,
+        "success": 106,
+        "failed": 676,
+        "dismiss": 10,
+        "fail_rate": 85.4,
+        "dismiss_rate": 1.3
       }
     },
     "live_activity": {
-      "total": 13569,
-      "completed": 12272,
-      "failed": 1297,
-      "fail_rate": 9.6
+      "total": 13186,
+      "completed": 11377,
+      "failed": 1809,
+      "fail_rate": 13.7
     },
     "daily_rates": [
-      {
-        "date": "2026-08-12",
-        "gen_starts": 1498,
-        "gen_fails": 16,
-        "gen_fail_rate": 1.1,
-        "feed_views": 2302,
-        "feed_errors": 38,
-        "feed_error_rate": 1.7,
-        "share_attempts": 183,
-        "share_fails": 139,
-        "share_dismiss": 11,
-        "share_fail_rate": 76.0,
-        "save_attempts": 459,
-        "save_fails": 15,
-        "save_fail_rate": 3.3,
-        "la_total": 2702,
-        "la_fails": 181,
-        "la_fail_rate": 6.7
-      },
       {
         "date": "2026-08-13",
         "gen_starts": 1185,
@@ -1104,7 +1087,7 @@
         "gen_starts": 1100,
         "gen_fails": 99,
         "gen_fail_rate": 9.0,
-        "feed_views": 1311,
+        "feed_views": 1313,
         "feed_errors": 13,
         "feed_error_rate": 1.0,
         "share_attempts": 125,
@@ -1114,18 +1097,18 @@
         "save_attempts": 392,
         "save_fails": 5,
         "save_fail_rate": 1.3,
-        "la_total": 1998,
+        "la_total": 2002,
         "la_fails": 152,
         "la_fail_rate": 7.6
       },
       {
         "date": "2026-08-16",
-        "gen_starts": 1136,
+        "gen_starts": 1137,
         "gen_fails": 129,
-        "gen_fail_rate": 11.4,
-        "feed_views": 1479,
-        "feed_errors": 31,
-        "feed_error_rate": 2.1,
+        "gen_fail_rate": 11.3,
+        "feed_views": 1480,
+        "feed_errors": 32,
+        "feed_error_rate": 2.2,
         "share_attempts": 161,
         "share_fails": 128,
         "share_dismiss": 2,
@@ -1139,69 +1122,99 @@
       },
       {
         "date": "2026-08-17",
-        "gen_starts": 1032,
-        "gen_fails": 200,
-        "gen_fail_rate": 19.4,
-        "feed_views": 1326,
+        "gen_starts": 1045,
+        "gen_fails": 202,
+        "gen_fail_rate": 19.3,
+        "feed_views": 1335,
         "feed_errors": 31,
         "feed_error_rate": 2.3,
-        "share_attempts": 83,
-        "share_fails": 75,
+        "share_attempts": 85,
+        "share_fails": 77,
         "share_dismiss": 4,
-        "share_fail_rate": 90.4,
-        "save_attempts": 297,
+        "share_fail_rate": 90.6,
+        "save_attempts": 303,
         "save_fails": 6,
         "save_fail_rate": 2.0,
-        "la_total": 1759,
-        "la_fails": 208,
+        "la_total": 1778,
+        "la_fails": 210,
         "la_fail_rate": 11.8
       },
       {
         "date": "2026-08-18",
-        "gen_starts": 763,
-        "gen_fails": 358,
-        "gen_fail_rate": 46.9,
-        "feed_views": 746,
-        "feed_errors": 14,
-        "feed_error_rate": 1.9,
-        "share_attempts": 74,
+        "gen_starts": 1563,
+        "gen_fails": 724,
+        "gen_fail_rate": 46.3,
+        "feed_views": 1529,
+        "feed_errors": 26,
+        "feed_error_rate": 1.7,
+        "share_attempts": 111,
+        "share_fails": 97,
+        "share_dismiss": 0,
+        "share_fail_rate": 87.4,
+        "save_attempts": 360,
+        "save_fails": 5,
+        "save_fail_rate": 1.4,
+        "la_total": 2267,
+        "la_fails": 746,
+        "la_fail_rate": 32.9
+      },
+      {
+        "date": "2026-08-19",
+        "gen_starts": 731,
+        "gen_fails": 311,
+        "gen_fail_rate": 42.5,
+        "feed_views": 694,
+        "feed_errors": 8,
+        "feed_error_rate": 1.2,
+        "share_attempts": 70,
         "share_fails": 67,
         "share_dismiss": 0,
-        "share_fail_rate": 90.5,
-        "save_attempts": 167,
+        "share_fail_rate": 95.7,
+        "save_attempts": 151,
         "save_fails": 1,
-        "save_fail_rate": 0.6,
-        "la_total": 1084,
-        "la_fails": 365,
-        "la_fail_rate": 33.7
+        "save_fail_rate": 0.7,
+        "la_total": 1113,
+        "la_fails": 310,
+        "la_fail_rate": 27.9
       }
     ],
     "by_version": [
       {
         "version": "7.3.1",
-        "rows": 108035,
-        "gen_starts": 3816,
-        "gen_fails": 812,
-        "gen_fail_rate": 21.3,
-        "la_fails": 834,
-        "la_fail_rate": 12.9,
-        "share_fails": 362,
-        "share_fail_rate": 89.6
+        "rows": 166514,
+        "gen_starts": 5332,
+        "gen_fails": 1491,
+        "gen_fail_rate": 28.0,
+        "la_fails": 1519,
+        "la_fail_rate": 17.4,
+        "share_fails": 461,
+        "share_fail_rate": 89.9
       },
       {
         "version": "7.3.0",
-        "rows": 94559,
-        "gen_starts": 3656,
+        "rows": 64237,
+        "gen_starts": 2313,
         "gen_fails": 0,
         "gen_fail_rate": 0.0,
-        "la_fails": 435,
-        "la_fail_rate": 6.6,
-        "share_fails": 353,
-        "share_fail_rate": 89.1
+        "la_fails": 280,
+        "la_fail_rate": 6.7,
+        "share_fails": 215,
+        "share_fail_rate": 88.5
+      },
+      {
+        "version": "7.2.0",
+        "rows": 3133,
+        "gen_starts": 145,
+        "gen_fails": 8,
+        "gen_fail_rate": 5.5,
+        "la_fails": 9,
+        "la_fail_rate": 3.1,
+        "share_fails": 0,
+        "share_fail_rate": 0.0
       },
       {
         "version": "7.4.0",
-        "rows": 6253,
+        "rows": 341,
         "gen_starts": 9,
         "gen_fails": 1,
         "gen_fail_rate": 11.1,
@@ -1211,19 +1224,8 @@
         "share_fail_rate": 0.0
       },
       {
-        "version": "7.2.0",
-        "rows": 4979,
-        "gen_starts": 271,
-        "gen_fails": 24,
-        "gen_fail_rate": 8.9,
-        "la_fails": 27,
-        "la_fail_rate": 5.2,
-        "share_fails": 1,
-        "share_fail_rate": 1.5
-      },
-      {
         "version": "7.4.1",
-        "rows": 24,
+        "rows": 15,
         "gen_starts": 0,
         "gen_fails": 0,
         "gen_fail_rate": 0.0,
@@ -1239,9 +1241,9 @@
         "event": "explore_generate_fail",
         "error_type": "time_to_action (median 65s)",
         "error_code": "\u2014",
-        "users": 232,
-        "rows": 813,
-        "rate": "10.5%",
+        "users": 347,
+        "rows": 1492,
+        "rate": "19.1%",
         "severity": "crit",
         "notes": "Backend inference failure / generation timeout logged in app v7.3.1+. Spiked to ~11% on recent days."
       },
@@ -1250,9 +1252,9 @@
         "event": "explore_fail_onscreen_view",
         "error_type": "On-screen fail dialog",
         "error_code": "3001 / 3002 / 503",
-        "users": 9,
-        "rows": 23,
-        "rate": "0.3%",
+        "users": 4,
+        "rows": 7,
+        "rate": "0.1%",
         "severity": "crit",
         "notes": "Fail dialog shown while watching Generating screen (v7.2.0). 87% recovered via 'Back to Explore'."
       },
@@ -1261,9 +1263,9 @@
         "event": "explore_try_result_action [share]",
         "error_type": "status=failed",
         "error_code": "\u2014",
-        "users": 304,
-        "rows": 716,
-        "rate": "82.7%",
+        "users": 274,
+        "rows": 676,
+        "rate": "85.4%",
         "severity": "crit",
         "notes": "Severe share-sheet crash or native UIActivityViewController export failure before completion."
       },
@@ -1272,9 +1274,9 @@
         "event": "explore_try_result_action [share]",
         "error_type": "status=dismiss",
         "error_code": "\u2014",
-        "users": 7,
-        "rows": 21,
-        "rate": "2.4%",
+        "users": 4,
+        "rows": 10,
+        "rate": "1.3%",
         "severity": "warn",
         "notes": "User intentionally cancelled or dismissed the share sheet (not a technical failure)."
       },
@@ -1283,9 +1285,9 @@
         "event": "explore_live_activity_complete",
         "error_type": "status=failed",
         "error_code": "\u2014",
-        "users": 417,
-        "rows": 1297,
-        "rate": "9.6%",
+        "users": 452,
+        "rows": 1809,
+        "rate": "13.7%",
         "severity": "warn",
         "notes": "Background Live Activity reached error state while app was minimized or in background."
       },
@@ -1294,8 +1296,8 @@
         "event": "explore_error_view",
         "error_type": "fetch_failed",
         "error_code": "\u2014",
-        "users": 107,
-        "rows": 128,
+        "users": 102,
+        "rows": 117,
         "rate": "1.2%",
         "severity": "crit",
         "notes": "Explore catalog API response error, HTTP non-200, or invalid payload schema."
@@ -1305,8 +1307,8 @@
         "event": "explore_error_view",
         "error_type": "no_internet",
         "error_code": "\u2014",
-        "users": 32,
-        "rows": 60,
+        "users": 26,
+        "rows": 54,
         "rate": "0.6%",
         "severity": "warn",
         "notes": "Client offline when trying to open or refresh the Explore tab."
@@ -1316,9 +1318,9 @@
         "event": "explore_try_result_action [save]",
         "error_type": "status=failed",
         "error_code": "\u2014",
-        "users": 34,
-        "rows": 41,
-        "rate": "1.7%",
+        "users": 31,
+        "rows": 36,
+        "rate": "1.5%",
         "severity": "warn",
         "notes": "Video save/render to camera roll failed (disk space, encoding, or write error)."
       },
@@ -1327,9 +1329,9 @@
         "event": "explore_try_result_action [save]",
         "error_type": "permission_denied",
         "error_code": "\u2014",
-        "users": 8,
-        "rows": 13,
-        "rate": "0.5%",
+        "users": 6,
+        "rows": 8,
+        "rate": "0.3%",
         "severity": "crit",
         "notes": "iOS Photo Library permission denied by user, preventing save to Camera Roll."
       }
@@ -1339,183 +1341,183 @@
     [
       "explore_filter_click",
       "Switches category via pill / see-all",
-      930,
-      91091,
+      861,
+      117428,
       "support"
     ],
     [
       "explore_style_click",
       "Taps a style \u2014 start of a try (mints try_id)",
-      1591,
-      14088,
+      1487,
+      13633,
       "funnel"
     ],
     [
       "explore_live_activity_complete",
       "Live Activity reaches final state",
-      1184,
-      13569,
+      1107,
+      13186,
       "reentry"
     ],
     [
       "explore_try_result_action",
       "Taps a button on the result (save/share/\u2026)",
-      1127,
-      11738,
+      1040,
+      11015,
       "funnel"
     ],
     [
       "explore_view",
       "Opens the Explore tab (once per visit)",
-      2266,
-      10316,
+      2139,
+      9503,
       "funnel"
     ],
     [
       "explore_complete",
       "Leaves Explore (tab switch / background)",
-      1971,
-      9374,
+      1856,
+      8634,
       "support"
     ],
     [
       "explore_try_picker_select",
       "Chose photo(s) in the picker",
-      1468,
-      8302,
+      1368,
+      8339,
+      "funnel"
+    ],
+    [
+      "explore_try_generate_start",
+      "Generating screen starts",
+      1109,
+      7799,
       "funnel"
     ],
     [
       "explore_search_query",
       "Types a search (debounced, length only)",
-      842,
-      7963,
+      790,
+      7795,
       "support"
-    ],
-    [
-      "explore_try_generate_start",
-      "Generating screen starts",
-      1192,
-      7752,
-      "funnel"
     ],
     [
       "explore_try_abandon",
       "Try ended with no result action (drop)",
-      1299,
-      7073,
+      1216,
+      6612,
       "drop"
     ],
     [
       "explore_try_result_view",
       "Result screen shown",
-      1143,
-      6997,
+      1051,
+      6552,
       "funnel"
     ],
     [
       "explore_catalog_ready",
       "Feed finished loading",
-      2214,
-      6383,
+      2086,
+      6046,
       "funnel"
     ],
     [
       "explore_live_activity_start",
       "Live Activity begins (left app mid-gen)",
-      950,
-      6057,
+      877,
+      5215,
       "reentry"
     ],
     [
       "explore_search_complete",
       "Leaves the search screen",
-      907,
-      3757,
+      842,
+      3557,
       "support"
     ],
     [
       "explore_try_minimize",
       "Minimizes generating to the nav pill",
-      658,
-      2892,
-      "reentry"
-    ],
-    [
-      "explore_try_resume",
-      "Returns to a backgrounded gen",
-      685,
-      2404,
+      582,
+      2379,
       "reentry"
     ],
     [
       "explore_search_open",
       "Opens search (magnifier)",
-      931,
-      2030,
+      865,
+      2006,
       "support"
     ],
     [
-      "explore_notification_tap",
-      "Taps the completion push",
-      324,
-      963,
+      "explore_try_resume",
+      "Returns to a backgrounded gen",
+      607,
+      2006,
       "reentry"
     ],
     [
       "explore_generate_fail",
       "Generation processing or inference failed",
-      232,
-      813,
+      347,
+      1492,
       "drop"
+    ],
+    [
+      "explore_notification_tap",
+      "Taps the completion push",
+      279,
+      841,
+      "reentry"
     ],
     [
       "explore_error_view",
       "Feed error (no-internet / empty / fetch-fail)",
-      133,
-      188,
+      123,
+      171,
       "drop"
     ],
     [
       "explore_fail_onscreen_complete",
       "On-screen fail dialog closed",
-      9,
-      23,
+      4,
+      7,
       "drop"
     ],
     [
       "explore_fail_onscreen_view",
       "Gen failed while watching Generating",
-      9,
-      23,
+      4,
+      7,
       "drop"
     ],
     [
       "explore_fail_onscreen_back_click",
       "'Back to Explore' on fail dialog",
-      8,
-      22,
+      3,
+      6,
       "drop"
     ],
     [
       "explore_ready_view",
       "'Ready' dialog when result finished off-screen",
-      5,
-      11,
+      3,
+      4,
       "support"
     ],
     [
       "explore_ready_complete",
       "'Ready' dialog closed",
-      4,
-      10,
+      2,
+      3,
       "support"
     ],
     [
       "explore_ready_open_click",
       "'View' on the ready dialog \u2192 result",
-      3,
-      9,
+      2,
+      2,
       "support"
     ],
     [
@@ -1536,13 +1538,13 @@
   "meta": {
     "feature": "Explore (302)",
     "source": "BigQuery analytics_467542142 (direct)",
-    "window": "2026-08-12 \u2192 2026-08-18",
-    "total_rows": 213850,
-    "total_users": 2271,
-    "free_users": 1120,
-    "premium_users": 1151,
+    "window": "2026-08-13 \u2192 2026-08-19",
+    "total_rows": 234240,
+    "total_users": 2141,
+    "free_users": 1086,
+    "premium_users": 1055,
     "app_version": "7.3.1",
-    "synced_at": "2026-08-18 09:47",
+    "synced_at": "2026-08-19 09:27",
     "pull_ok": true
   }
 };</script>
@@ -1922,9 +1924,10 @@ function drawFailDailyTrend(){
 function drawFailBreakdowns(){
   const g=DATA.fails.generation, fd=DATA.fails.feed;
   
-  // Generation Error Codes Donut
-  const genCodes = g.error_codes.length ? g.error_codes : [["No error code (v7.3.1+ timeout)", g.fails - 41, "crit"], ["3001/3002/503 (v7.2.0)", 41, "warn"]];
-  donut("gen-err-donut", genCodes, g.fails.toString(), "gen fails");
+  // Fail-reason donut: error codes from on/off-screen fails, deduped by try_id
+  const genCodes = g.error_codes.length ? g.error_codes : [["no fails", 0, "muted"]];
+  const reasonTotal = genCodes.reduce((a, r) => a + r[1], 0);
+  donut("gen-err-donut", genCodes, reasonTotal.toString(), "fail reasons");
   legend("gen-err-legend", genCodes);
   
   const medEl=document.getElementById("gen-fail-median");
@@ -1936,7 +1939,8 @@ function drawFailBreakdowns(){
   if(segEl)segEl.innerHTML = 
     `Premium user fail rate is <span class="big">${g.premium[2]}%</span> (${g.premium[1]}/${g.premium[0]} users) vs Free ` +
     `<b>${g.free[2]}%</b> (${g.free[1]}/${g.free[0]} users) — higher premium fail rate reflects ${DATA.retry.avg_tries}× repeat volume per user. ` +
-    `Recovery: <b>${g.onscreen_recovery_pct}%</b> clicked 'Back to Explore' after fail dialog.`;
+    `Recovery: <b>${g.onscreen_recovery_pct}%</b> clicked 'Back to Explore' after fail dialog. ` +
+    `<b>${g.fail_events_raw}</b> fail events → <b>${g.fail_units}</b> distinct failures (deduped by try_id).`;
 
   // Feed Error Types Donut
   donut("feed-err-donut", fd.types, fd.errors.toString(), "feed errors");
