@@ -376,13 +376,14 @@
     <div class="sec-head"><h2>Most-used styles <span style="font-size:12px;font-weight:400;color:var(--muted)">· what people actually tap</span></h2></div>
     <p class="sec-note">Which styles and categories users pick from the feed — ranked by unique users who tapped
       (<code>explore_style_click</code>), with how many went on to generate and see a result.
+      Each style shows its <b>CMS id</b> (the content-tree <code>id</code>, resolved to a name via the Explore CMS tree).
       <span id="styles-distinct"></span></p>
     <div class="chart-title">Top style categories — unique users who tapped a style</div>
     <div id="cat-chart" class="chart" style="height:340px" role="img" aria-label="Top style categories bar chart"></div>
-    <div class="chart-title" style="margin-top:22px">Top 15 individual styles</div>
+    <div class="chart-title" style="margin-top:22px">Top 20 individual styles <span id="styles-names-src" style="font-weight:400;color:var(--muted)"></span></div>
     <div class="tbl-scroll">
       <table>
-        <thead><tr><th class="num">#</th><th>Style</th><th>Category</th><th class="num">Tapped</th><th class="num">Generated</th><th class="num">Result</th></tr></thead>
+        <thead><tr><th class="num">#</th><th>Style</th><th>CMS id</th><th>Category</th><th class="num">Tapped</th><th class="num">Generated</th><th class="num">Result</th></tr></thead>
         <tbody id="styles-tbl"></tbody>
       </table>
     </div>
@@ -732,14 +733,14 @@
       [
         "Saved / shared",
         91,
-        1857,
+        1856,
         2043,
         "good"
       ],
       [
         "Reached a result",
         89,
-        5157,
+        5156,
         5770,
         "free"
       ],
@@ -753,7 +754,7 @@
       [
         "No result",
         88,
-        6127,
+        6128,
         6995,
         "muted"
       ]
@@ -841,6 +842,7 @@
     "top": [
       [
         "cmso6zi2203paxfgeyifnjb99",
+        "Lion birthday",
         "Birthday",
         426,
         348,
@@ -848,6 +850,7 @@
       ],
       [
         "cmso6zhuy0061kv3p78fn1x57",
+        "Lion queen 1",
         "Birthday",
         380,
         307,
@@ -855,6 +858,7 @@
       ],
       [
         "cms4vli0f0exzwlkc5n7lohps",
+        "Birthday Bench",
         "Celebration & Holiday",
         268,
         213,
@@ -862,6 +866,7 @@
       ],
       [
         "cms6wvrt100icd4xvpak0o3yf",
+        "Birthday Cats",
         "Celebration & Holiday",
         192,
         138,
@@ -869,6 +874,7 @@
       ],
       [
         "cmsx0tpox06r92feo8fpm13tq",
+        "Champagne Birthday",
         "Birthday",
         175,
         141,
@@ -876,6 +882,7 @@
       ],
       [
         "cmsx0tqct00qnknujjp22iavy",
+        "Birthday with Leo",
         "Birthday",
         168,
         140,
@@ -883,6 +890,7 @@
       ],
       [
         "cmsnb5le300p2xfgekwhi9ku8",
+        "Pet Love",
         "More Trends",
         99,
         60,
@@ -890,6 +898,7 @@
       ],
       [
         "cms4vkohb01lr10fjksx8eaxq",
+        "Celeb Bear",
         "Celebrity & Idol",
         83,
         48,
@@ -897,6 +906,7 @@
       ],
       [
         "cms4vlk380bpyqyue21gkes02",
+        "Celebration Fire Cake",
         "Celebration & Holiday",
         82,
         62,
@@ -904,6 +914,7 @@
       ],
       [
         "cms4vkxxu01o410fjx2syt2nh",
+        "V-Secret 1",
         "Fashion & Photoshoot",
         82,
         59,
@@ -911,6 +922,7 @@
       ],
       [
         "cmso6zhba005rkv3ptzlag8wt",
+        "Meet younger self 4",
         "Mini Version",
         78,
         51,
@@ -918,6 +930,7 @@
       ],
       [
         "cms4d9kwz0du7wlkcum7d6xbo",
+        "Beach Film",
         "Travel & Places",
         77,
         47,
@@ -925,6 +938,7 @@
       ],
       [
         "cms4d9k530du2wlkca633xds9",
+        "Moon Tide",
         "Anime & Pop-culture",
         76,
         39,
@@ -932,6 +946,7 @@
       ],
       [
         "cmsnb5l3900oxxfgei6hdod38",
+        "Paw Snap",
         "More Trends",
         75,
         50,
@@ -939,13 +954,55 @@
       ],
       [
         "cmso6zhhy03p5xfgeqz4qb112",
+        "Meet younger self 5",
         "Mini Version",
         72,
         25,
         25
+      ],
+      [
+        "cmsnb5kr105p8f42k0lnsdnh5",
+        "Fur & Me",
+        "More Trends",
+        70,
+        37,
+        30
+      ],
+      [
+        "cms4e4wl20dwswlkclpeyuead",
+        "Full Speed",
+        "Banner",
+        70,
+        29,
+        29
+      ],
+      [
+        "cms4d9kcx00pz10fjwyty5z7h",
+        "Barbie USA",
+        "Anime & Pop-culture",
+        69,
+        31,
+        27
+      ],
+      [
+        "cmskkrelo0031f42k0wl2w2b1",
+        "Me + You",
+        "Black & White",
+        67,
+        29,
+        28
+      ],
+      [
+        "cms6ww1wy00kzd4xvaatau5e8",
+        "Leo Season",
+        "Uncategorised",
+        66,
+        57,
+        54
       ]
     ],
-    "distinct": 618
+    "distinct": 618,
+    "names_source": "cms-live"
   },
   "fails": {
     "summary": {
@@ -1549,8 +1606,8 @@
     "free_users": 1069,
     "premium_users": 1055,
     "app_version": "7.3.1",
-    "synced_at": "2026-08-20 11:06",
-    "pull_ok": true
+    "synced_at": "2026-08-20 11:16",
+    "pull_ok": false
   }
 };</script>
 <style>#sync{display:none!important;}</style>
@@ -1833,10 +1890,14 @@ function drawStyles(){
       data:rr.map(r=>({value:r[1],itemStyle:{color:TH.free,borderRadius:4}})),
       label:{show:true,position:"right",color:TH.ink,fontFamily:TH.mono,fontWeight:700,fontSize:12}}]},true);
   document.getElementById("styles-tbl").innerHTML=DATA.styles.top.map((r,i)=>{
-    const[sid,cat,tap,gen,res]=r;
-    return `<tr><td class="num">${i+1}</td><td class="ev">…${sid.slice(-8)}</td><td>${cat}</td>`+
+    const[sid,name,cat,tap,gen,res]=r;
+    const label=name?`<b>${name}</b>`:`<span style="color:var(--muted)">— unnamed —</span>`;
+    return `<tr><td class="num">${i+1}</td><td>${label}</td>`+
+      `<td class="ev" title="${sid}" style="user-select:all">${sid}</td><td>${cat}</td>`+
       `<td class="num">${tap}</td><td class="num">${gen}</td><td class="num">${res}</td></tr>`;
   }).join("");
+  const src=document.getElementById("styles-names-src");
+  if(src){const m={"cms-live":"· names from CMS tree","cms-cache":"· names from cached CMS tree","none":"· names unavailable (ids only)"};src.textContent=m[DATA.styles.names_source]||"";}
   const sd=document.getElementById("styles-distinct");
   if(sd)sd.innerHTML=`<b style="color:var(--ink-2)">${DATA.styles.distinct}</b> distinct styles were tapped in the window.`;
 }
