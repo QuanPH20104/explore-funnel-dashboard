@@ -162,6 +162,7 @@
   <nav class="app-nav" id="main-nav">
     <button type="button" class="nav-item active" data-tab="moment"><span class="nav-dot active" style="background:var(--prem)"></span>Moment aiVideoV520 (Post-Gen)</button>
     <button type="button" class="nav-item" data-tab="explore"><span class="nav-dot"></span>Explore Funnel (302)</button>
+    <button type="button" class="nav-item" data-tab="retention"><span class="nav-dot"></span>Moments Retention</button>
   </nav>
   <header>
     <div class="eyebrow" id="header-eyebrow">Artimind · Moment aiVideoV520 · Post-Gen Cancel</div>
@@ -409,28 +410,7 @@
     </div>
   </section>
 
-  <!-- MOMENTS RETENTION -->
-  <section>
-    <div class="sec-head"><h2>Moments Retention <span style="font-size:12px;font-weight:400;color:var(--muted)">· cohort = first moments_home_view</span></h2></div>
-    <p class="sec-note">Cohort quay lại D1/D3/D7 + số lượt gen trên đầu user, đối chiếu <b>store</b> (<code>cancel_at</code> ∩ post-gen, <code>week_renew_*</code>) với <b>in-app</b> (<code>iap_exit</code>, <code>back_click</code>, <code>iap_successfull</code>). Fast track 7d cho số provisional, slow track 90d cho số chốt.</p>
-    <div class="kpis" id="mr-kpis"></div>
-    <div class="two" style="margin-top:22px">
-      <div>
-        <div class="chart-title">Cohort back on D1 / D3 / D7 (%)</div>
-        <div id="mr-d" class="chart" style="height:220px" role="img" aria-label="Moments cohort D1 D3 D7 bar chart"></div>
-      </div>
-      <div>
-        <div class="chart-title">Generations per user (buckets)</div>
-        <div id="mr-gen" class="chart" style="height:220px" role="img" aria-label="Moments generations per user bar chart"></div>
-      </div>
-    </div>
-    <div class="chart-title" style="margin-top:18px">Cancel / renew — store vs in-app</div>
-    <table>
-      <thead><tr><th>Signal</th><th class="num">Store</th><th class="num">In-app</th><th class="num">Lift high-gen − low</th></tr></thead>
-      <tbody id="mr-table"></tbody>
-    </table>
-    <p class="sec-note" id="mr-note"></p>
-  </section>
+
 
   <!-- MOST-USED STYLES -->
   <section>
@@ -465,6 +445,32 @@
         <tbody id="eventmap"></tbody>
       </table>
     </div>
+  </section>
+  </div>
+
+  <!-- TAB PANE 3: MOMENTS RETENTION (dual-track cohort) -->
+  <div id="tab-pane-retention" class="tab-pane" style="display:none">
+  <!-- MOMENTS RETENTION -->
+  <section>
+    <div class="sec-head"><h2>Moments Retention <span style="font-size:12px;font-weight:400;color:var(--muted)">· cohort = first moments_home_view</span></h2></div>
+    <p class="sec-note">Cohort quay lại D1/D3/D7 + số lượt gen trên đầu user, đối chiếu <b>store</b> (<code>cancel_at</code> ∩ post-gen, <code>week_renew_*</code>) với <b>in-app</b> (<code>iap_exit</code>, <code>back_click</code>, <code>iap_successfull</code>). Fast track 7d cho số provisional, slow track 90d cho số chốt.</p>
+    <div class="kpis" id="mr-kpis"></div>
+    <div class="two" style="margin-top:22px">
+      <div>
+        <div class="chart-title">Cohort back on D1 / D3 / D7 (%)</div>
+        <div id="mr-d" class="chart" style="height:220px" role="img" aria-label="Moments cohort D1 D3 D7 bar chart"></div>
+      </div>
+      <div>
+        <div class="chart-title">Generations per user (buckets)</div>
+        <div id="mr-gen" class="chart" style="height:220px" role="img" aria-label="Moments generations per user bar chart"></div>
+      </div>
+    </div>
+    <div class="chart-title" style="margin-top:18px">Cancel / renew — store vs in-app</div>
+    <table>
+      <thead><tr><th>Signal</th><th class="num">Store</th><th class="num">In-app</th><th class="num">Lift high-gen − low</th></tr></thead>
+      <tbody id="mr-table"></tbody>
+    </table>
+    <p class="sec-note" id="mr-note"></p>
   </section>
   </div>
 
@@ -533,12 +539,14 @@ function switchTab(tabId){
     const dot = b.querySelector(".nav-dot");
     if(dot){
       dot.classList.toggle("active", active);
-      dot.style.background = active ? (tabId==="moment"?"var(--prem)":"var(--free)") : "var(--border-strong)";
+      dot.style.background = active ? (tabId==="moment"?"var(--prem)":tabId==="retention"?"var(--good)":"var(--free)") : "var(--border-strong)";
     }
   });
   document.getElementById("tab-pane-explore").style.display = tabId === "explore" ? "block" : "none";
   const momentPane = document.getElementById("tab-pane-moment");
   if(momentPane) momentPane.style.display = tabId === "moment" ? "block" : "none";
+  const retPane = document.getElementById("tab-pane-retention");
+  if(retPane) retPane.style.display = tabId === "retention" ? "block" : "none";
 
   const eyebrow = document.getElementById("header-eyebrow");
   const title = document.getElementById("header-title");
@@ -550,6 +558,11 @@ function switchTab(tabId){
     if(title) title.textContent = "Moment aiVideoV520 post-gen cancel — Result to Back / Share / Save / Memory";
     if(sub) sub.textContent = "aiVideos from CMS aiVideoV520 render in the Moment tab (not Explore videos). Post-generation back-cancel funnel, cancel rate by category, and cancel by style — from live BigQuery DATA.postgen.";
     if(caveat) caveat.innerHTML = "<b>Data source:</b> BigQuery <code>iip032-artimind.analytics_467542142</code> (direct, Moment aiVideoV520 post-gen) · CMS collection <a href=\"https://cms.artimind.com/a/artimind/s/aivideov520\" target=\"_blank\" rel=\"noopener\">aiVideoV520</a> renders in the Moment tab, not Explore.";
+  } else if(tabId === "retention"){
+    if(eyebrow) eyebrow.textContent = "Artimind · Moment · retention cohort";
+    if(title) title.textContent = "Moments Retention — D1/D3/D7, gens, and cancel/renew lift";
+    if(sub) sub.textContent = "Cohort from first moments_home_view: how many return on D1/D3/D7, how much they generate, and how high-gen users cancel less and renew more — store vs in-app, from live BigQuery.";
+    if(caveat) caveat.innerHTML = "<b>Data source:</b> BigQuery <code>iip032-artimind.analytics_467542142</code> (direct, Moments) + store <code>IIP032_subcriptions_monitoring</code> · fast 7-day track (provisional) + slow 90-day track (final). Estimate only, not causal.";
   } else {
     if(eyebrow) eyebrow.textContent = "Artimind · Explore feature (302) · try-flow";
     if(title) title.textContent = "Where users drop off in Explore — fail rates, retention & result actions";
